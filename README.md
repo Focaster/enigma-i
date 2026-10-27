@@ -1,10 +1,14 @@
 # ENIGMA I · 恩格玛机互动复刻
 
+[![tests](https://github.com/Focaster/enigma-i/actions/workflows/tests.yml/badge.svg)](https://github.com/Focaster/enigma-i/actions/workflows/tests.yml)
+[![license: MIT](https://img.shields.io/badge/license-MIT-d4af69.svg)](LICENSE)
+
 An interactive, historically accurate **Enigma I (M3)** simulator in vanilla HTML, CSS and JavaScript — rotors, plugboard, double stepping and a live signal path. No build step, no dependencies, works offline.
 
 一台按历史接线表实现的 **Enigma I（M3）** 三转子密码机。纯静态网页，离线可用，不依赖任何框架或网络资源。
 
-> **在线演示**：部署到 GitHub Pages 后，地址为 `https://<你的用户名>.github.io/<仓库名>/`。部署步骤见 [PUBLISHING.md](PUBLISHING.md)。
+> **在线演示**：[https://focaster.github.io/enigma-i/](https://focaster.github.io/enigma-i/)  
+> 如果链接暂时打不开，说明 GitHub Pages 还没开启；步骤见 [PUBLISHING.md](PUBLISHING.md)。
 
 ![桌面端预览](preview/desktop.png)
 

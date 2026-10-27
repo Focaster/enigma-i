@@ -98,7 +98,7 @@ Interactive Enigma I (M3) simulator — rotors, plugboard, double stepping and a
 **Website**
 
 ```text
-https://<你的用户名>.github.io/<仓库名>/
+https://focaster.github.io/enigma-i/
 ```
 
 **Topics**（建议）
@@ -128,12 +128,12 @@ preview/social.png
 
 这张图是 1280×640，已经包含标题、机器截图和功能关键词。
 
-## 5. 可选：README 徽章
+## 5. README 徽章
 
 CI 第一次运行通过后，可以在 README 顶部加：
 
 ```markdown
-![tests](https://github.com/<用户名>/<仓库名>/actions/workflows/tests.yml/badge.svg)
+![tests](https://github.com/Focaster/enigma-i/actions/workflows/tests.yml/badge.svg)
 ```
 
 还可以加：
@@ -142,27 +142,18 @@ CI 第一次运行通过后，可以在 README 顶部加：
 ![license](https://img.shields.io/badge/license-MIT-d4af69)
 ```
 
-徽章不是必需的；链接中的 `<用户名>/<仓库名>` 必须换成真实值，否则会显示 404。
+这两个徽章已经加入当前 README；如果以后改仓库名，记得同步修改链接。
 
-## 6. 可选：OG / 社交分享图
+## 6. OG / 社交分享图
 
-`index.html` 里目前写的是相对路径：
-
-```html
-<meta property="og:image" content="preview/social.png">
-```
-
-大多数浏览器和部分抓取器会按页面地址解析它。如果希望在 Twitter/X、Slack、Discord 等平台稳定显示大图，部署后把这一行改成绝对地址：
+`index.html` 里已经写入与当前仓库对应的绝对地址：
 
 ```html
-<meta property="og:image" content="https://<用户名>.github.io/<仓库名>/preview/social.png">
+<meta property="og:image" content="https://focaster.github.io/enigma-i/preview/social.png">
+<meta property="og:url" content="https://focaster.github.io/enigma-i/">
 ```
 
-再把 `og:url` 也补上（可选）：
-
-```html
-<meta property="og:url" content="https://<用户名>.github.io/<仓库名>/">
-```
+如果以后改了用户名、仓库名或自定义域名，需要同步修改这两行，以及 `<link rel="canonical">` 和 `twitter:image`。这样 Twitter/X、Slack、Discord 等平台才能稳定显示大图。
 
 ## 7. 可选：自定义域名
 
