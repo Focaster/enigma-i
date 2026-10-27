@@ -1,0 +1,24 @@
+{
+  "name": "enigma-i-interactive",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Interactive, historically accurate Enigma I (M3) simulator in vanilla HTML, CSS and JavaScript.",
+  "keywords": [
+    "enigma",
+    "enigma-machine",
+    "cryptography",
+    "history",
+    "ww2",
+    "vanilla-js",
+    "simulator",
+    "github-pages"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test test/engine.test.js",
+    "build": "node build-standalone.mjs"
+  }
+}

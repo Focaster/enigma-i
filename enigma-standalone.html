@@ -1,0 +1,4835 @@
+<!doctype html>
+<!-- Self-contained build. Source: index.html, styles.css, enigma-core.js, app.js, favicon.svg. -->
+
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>ENIGMA I · 恩格玛机互动复刻</title>
+  <meta name="description" content="在浏览器中复刻恩格玛机 Enigma I（M3）：五只可选转子、B/C 反射器、插线板、双步进与实时信号路径。可逐字加密、批量加解密、生成并分享密钥。">
+  <meta name="theme-color" content="#0b0c0e">
+  <meta property="og:title" content="ENIGMA I · 恩格玛机互动复刻">
+  <meta property="og:description" content="按历史接线表复刻的 Enigma I（M3）：转子、插线板、双步进与实时信号路径。纯静态网页，离线可玩。">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="preview/social.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJFbmlnbWEgSSI+CiAgPGRlZnM+CiAgICA8cmFkaWFsR3JhZGllbnQgaWQ9ImJyYXNzIiBjeD0iMzUlIiBjeT0iMjglIiByPSI3OCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmOGU0YjQiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIwLjUyIiBzdG9wLWNvbG9yPSIjZDJhYTYwIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMC44MiIgc3RvcC1jb2xvcj0iI2E2N2EzNSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM1YzNjMTIiLz4KICAgIDwvcmFkaWFsR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgcng9IjE0IiBmaWxsPSIjMGIwYzBlIi8+CiAgPGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMjMiIGZpbGw9InVybCgjYnJhc3MpIiBzdHJva2U9IiMyYTFjMGMiIHN0cm9rZS13aWR0aD0iMiIvPgogIDxjaXJjbGUgY3g9IjMyIiBjeT0iMzIiIHI9IjE3LjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzViM2YxNCIgc3Ryb2tlLW9wYWNpdHk9IjAuNDUiIHN0cm9rZS13aWR0aD0iMSIvPgogIDx0ZXh0IHg9IjMyIiB5PSI0MyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsICdUaW1lcyBOZXcgUm9tYW4nLCBzZXJpZiIKICAgICAgICBmb250LXNpemU9IjMwIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjMmIxYTA2Ij5FPC90ZXh0Pgo8L3N2Zz4K">
+  <style>
+/* ==========================================================================
+   ENIGMA I — interactive replica
+   Palette: charcoal, walnut, brass, warm lamp light.
+   ========================================================================== */
+
+:root {
+  color-scheme: dark;
+  --bg: #0a0b0c;
+  --panel: #17120d;
+  --panel-deep: #100c08;
+  --panel-raised: #1e1710;
+  --line: rgba(212, 175, 105, 0.18);
+  --line-strong: rgba(212, 175, 105, 0.4);
+  --brass: #d4af69;
+  --brass-bright: #f2d8a0;
+  --brass-dim: #947033;
+  --cream: #f1e6d0;
+  --text: #e7dcc8;
+  --muted: #a6967f;
+  --faint: #746654;
+  --amber: #ffb35c;
+  --amber-deep: #c97b22;
+  --teal: #7fb7b0;
+  --violet: #b3a0d8;
+  --danger: #e0836b;
+  --radius: 16px;
+  --radius-sm: 9px;
+  --font-display: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, "Songti SC", "Noto Serif CJK SC", serif;
+  --font-ui: "Segoe UI", "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
+  --font-mono: "Cascadia Mono", Consolas, "SFMono-Regular", "Liberation Mono", monospace;
+  --shadow-panel: 0 1px 0 rgba(255, 240, 210, 0.05) inset, 0 28px 70px -40px #000, 0 0 0 1px rgba(0, 0, 0, 0.45);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text);
+  background:
+    radial-gradient(1100px 680px at 14% -12%, rgba(212, 175, 105, 0.13), transparent 62%),
+    radial-gradient(900px 620px at 102% 2%, rgba(126, 63, 31, 0.2), transparent 58%),
+    radial-gradient(1200px 800px at 50% 120%, rgba(74, 48, 28, 0.18), transparent 60%),
+    linear-gradient(180deg, #0b0c0e 0%, #0a0908 46%, #0c0a08 100%);
+  background-attachment: fixed;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.012) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(circle at 50% 20%, #000 10%, transparent 78%);
+}
+
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  pointer-events: none;
+  opacity: 0.2;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+}
+
+::selection {
+  background: rgba(255, 179, 92, 0.3);
+  color: #fff8e8;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #5b4328 transparent;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4a3720;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  padding: 0;
+  background: none;
+  border: 0;
+}
+
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: -60px;
+  left: 20px;
+  z-index: 400;
+  padding: 10px 16px;
+  color: #201405;
+  background: var(--brass-bright);
+  border-radius: 8px;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 16px;
+}
+
+.icon {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex: none;
+}
+
+.icon--sm {
+  width: 14px;
+  height: 14px;
+}
+
+/* ==========================================================================
+   Masthead
+   ========================================================================== */
+
+.masthead {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 30px 32px 22px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+}
+
+.brand-seal {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  flex: none;
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: 31px;
+  font-weight: 700;
+  color: #2b1a06;
+  background:
+    radial-gradient(circle at 32% 26%, #f8e4b4 0%, #d9b46d 34%, #b18743 60%, #7a5725 82%, #4a3213 100%);
+  border: 1px solid #2a1c0c;
+  box-shadow:
+    0 0 0 1px rgba(242, 216, 160, 0.38),
+    0 0 0 5px rgba(0, 0, 0, 0.28),
+    0 12px 28px -10px rgba(0, 0, 0, 0.9),
+    inset 0 2px 3px rgba(255, 255, 255, 0.55),
+    inset 0 -3px 6px rgba(50, 30, 5, 0.6);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.brand-seal::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  border: 1px solid rgba(66, 43, 10, 0.45);
+}
+
+.brand-text {
+  min-width: 0;
+}
+
+.kicker {
+  margin: 0 0 4px;
+  font-size: 9px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--brass-dim);
+}
+
+.brand h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(38px, 4.6vw, 58px);
+  font-weight: 600;
+  line-height: 0.9;
+  letter-spacing: 0.14em;
+  color: #f4ead6;
+  text-shadow: 0 2px 0 #000, 0 0 42px rgba(212, 175, 105, 0.16);
+}
+
+.brand h1 em {
+  font-style: normal;
+  color: var(--brass);
+}
+
+.tagline {
+  margin: 7px 0 0;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.header-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(20, 15, 10, 0.6);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--faint);
+}
+
+.header-chip b {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--brass-bright);
+}
+
+.ghost-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 13px;
+  border: 1px solid rgba(212, 175, 105, 0.22);
+  border-radius: 999px;
+  background: rgba(24, 18, 12, 0.55);
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.ghost-btn:hover {
+  border-color: var(--line-strong);
+  color: var(--cream);
+  background: rgba(36, 27, 17, 0.85);
+}
+
+.ghost-btn .icon--sound-off {
+  display: none;
+}
+
+.ghost-btn.is-muted .icon--sound-on {
+  display: none;
+}
+
+.ghost-btn.is-muted .icon--sound-off {
+  display: block;
+}
+
+/* ==========================================================================
+   Layout & panels
+   ========================================================================== */
+
+.layout {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 32px 40px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.28fr) minmax(390px, 0.82fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.panel {
+  position: relative;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(180deg, rgba(255, 244, 220, 0.035), transparent 26%),
+    linear-gradient(158deg, #19130e 0%, #120e0a 56%, #17110c 100%);
+  box-shadow: var(--shadow-panel);
+}
+
+.panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 4px;
+}
+
+.panel-heading {
+  min-width: 0;
+}
+
+.panel-kicker {
+  margin: 0 0 3px;
+  font-size: 8.5px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--brass-dim);
+}
+
+.panel h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #f0e4cd;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex: none;
+  padding: 4px 9px;
+  border: 1px solid rgba(212, 175, 105, 0.2);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.24);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  color: var(--brass);
+  white-space: nowrap;
+}
+
+.chip--count {
+  color: var(--muted);
+  border-color: rgba(212, 175, 105, 0.13);
+}
+
+.hint-line {
+  margin: 14px 0 0;
+  font-size: 10px;
+  line-height: 1.65;
+  color: var(--faint);
+}
+
+.muted {
+  color: var(--faint);
+}
+
+/* ==========================================================================
+   Machine
+   ========================================================================== */
+
+.machine {
+  padding: 0;
+  overflow: hidden;
+  border-color: rgba(212, 175, 105, 0.27);
+  background:
+    radial-gradient(120% 90% at 50% -10%, rgba(120, 78, 40, 0.24), transparent 60%),
+    linear-gradient(180deg, #1b140e 0%, #120d09 38%, #0e0a07 100%);
+}
+
+.machine::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(91deg, rgba(255, 255, 255, 0.016) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(1deg, rgba(0, 0, 0, 0.08) 0 1px, transparent 1px 7px);
+  opacity: 0.8;
+  z-index: 0;
+}
+
+.screw {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  z-index: 3;
+  background:
+    radial-gradient(circle at 35% 30%, #d9c39a, #8d744c 42%, #3b2c17 75%, #171009);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(0, 0, 0, 0.5);
+  opacity: 0.85;
+}
+
+.screw::after {
+  content: "";
+  position: absolute;
+  left: 22%;
+  right: 22%;
+  top: 48%;
+  height: 1px;
+  background: rgba(20, 12, 4, 0.65);
+  transform: rotate(-38deg);
+}
+
+.screw--tl { top: 11px; left: 11px; }
+.screw--tr { top: 11px; right: 11px; }
+.screw--bl { bottom: 11px; left: 11px; }
+.screw--br { bottom: 11px; right: 11px; }
+
+.machine-bar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 15px 26px;
+  border-bottom: 1px solid rgba(212, 175, 105, 0.14);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.08));
+}
+
+.machine-plate {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  color: var(--brass);
+  text-shadow: 0 1px 0 #000;
+}
+
+.machine-plate i {
+  font-style: normal;
+  font-size: 15px;
+  color: var(--brass-bright);
+}
+
+.machine-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--faint);
+  text-transform: uppercase;
+}
+
+.led {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #6f5a3a;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+body.is-running .led {
+  background: var(--amber);
+  box-shadow: 0 0 10px var(--amber), 0 0 0 2px rgba(0, 0, 0, 0.5);
+  animation: led-pulse 0.9s ease-in-out infinite;
+}
+
+body:has(.help-dialog[open]) {
+  overflow: hidden;
+}
+
+@keyframes led-pulse {
+  50% { opacity: 0.35; }
+}
+
+.rotor-deck {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(92px, 0.72fr);
+  gap: 12px;
+  padding: 18px 22px 10px;
+}
+
+.rotor {
+  position: relative;
+  padding: 9px 9px 11px;
+  border: 1px solid rgba(212, 175, 105, 0.22);
+  border-radius: 13px;
+  background:
+    linear-gradient(180deg, rgba(255, 235, 200, 0.05), transparent 22%),
+    linear-gradient(180deg, #251b12 0%, #160f09 54%, #100b07 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 240, 210, 0.08) inset,
+    0 14px 26px -18px #000,
+    0 0 0 1px rgba(0, 0, 0, 0.4);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.rotor.is-notch {
+  border-color: rgba(255, 179, 92, 0.52);
+  box-shadow:
+    0 0 0 1px rgba(255, 179, 92, 0.16),
+    0 0 34px -8px rgba(255, 140, 50, 0.4),
+    0 14px 26px -18px #000;
+}
+
+.rotor-cap {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 3px 8px;
+  font-size: 8.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.rotor-id {
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--brass-bright);
+}
+
+.rotor-window {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 100px;
+  overflow: hidden;
+  border-radius: 7px;
+  border: 1px solid #3d2c19;
+  background:
+    linear-gradient(180deg, #040302 0%, #0b0805 28%, #0d0905 64%, #050403 100%);
+  box-shadow:
+    inset 0 12px 20px -8px rgba(0, 0, 0, 0.95),
+    inset 0 -12px 20px -8px rgba(0, 0, 0, 0.95),
+    0 0 0 3px #1d140c,
+    0 0 0 4px rgba(212, 175, 105, 0.24),
+    0 1px 0 rgba(255, 240, 200, 0.1);
+}
+
+.rotor-window::before,
+.rotor-window::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 26%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.rotor-window::before {
+  top: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.78), transparent);
+}
+
+.rotor-window::after {
+  bottom: 0;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.78), transparent);
+}
+
+.rotor-letter {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-mono);
+  font-size: 52px;
+  font-weight: 700;
+  line-height: 1;
+  color: #f8eed9;
+  text-shadow:
+    0 0 24px rgba(255, 190, 110, 0.32),
+    0 2px 0 rgba(0, 0, 0, 0.8);
+  will-change: transform;
+}
+
+.ghost {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 700;
+  color: rgba(241, 230, 208, 0.14);
+  letter-spacing: 0;
+  pointer-events: none;
+}
+
+.ghost--prev { top: 7px; }
+.ghost--next { bottom: 7px; }
+
+.rotor-notch {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  z-index: 4;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2c2114;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.65);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rotor.is-notch .rotor-notch {
+  background: var(--amber);
+  box-shadow: 0 0 9px var(--amber), 0 0 0 1px rgba(0, 0, 0, 0.4);
+}
+
+.rotor-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 8px 2px 0;
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  color: var(--faint);
+}
+
+.rotor-meta b {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--brass);
+}
+
+.reflector-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 12px 10px;
+  border: 1px solid rgba(212, 175, 105, 0.3);
+  border-radius: 13px;
+  background:
+    linear-gradient(155deg, rgba(212, 175, 105, 0.14), transparent 45%),
+    linear-gradient(180deg, #2a2013 0%, #191108 60%, #120c07 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 240, 200, 0.16) inset,
+    0 0 0 1px rgba(0, 0, 0, 0.4),
+    0 14px 26px -18px #000;
+  color: var(--text);
+  transition: border-color 0.2s ease, filter 0.2s ease;
+}
+
+.reflector-card:hover {
+  border-color: rgba(242, 216, 160, 0.55);
+  filter: brightness(1.08);
+}
+
+.reflector-card::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px dashed rgba(212, 175, 105, 0.14);
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.ref-cap {
+  font-size: 8px;
+  letter-spacing: 0.28em;
+  color: var(--faint);
+}
+
+.ref-letter {
+  font-family: var(--font-display);
+  font-size: 38px;
+  line-height: 1;
+  color: var(--brass-bright);
+  text-shadow: 0 0 22px rgba(255, 190, 110, 0.22);
+}
+
+.ref-name {
+  font-size: 8.5px;
+  letter-spacing: 0.1em;
+  color: var(--faint);
+}
+
+/* Lamps */
+
+.lamp-section {
+  position: relative;
+  z-index: 1;
+  padding: 12px 22px 6px;
+}
+
+.section-label {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 8px;
+  font-size: 8px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.section-label span {
+  color: var(--brass-dim);
+  letter-spacing: 0.16em;
+}
+
+.lampboard {
+  width: min(100%, 560px);
+  margin: 0 auto;
+  padding: 14px 18px;
+  border: 1px solid #2c2014;
+  border-radius: 12px;
+  background:
+    radial-gradient(90% 130% at 50% 0%, rgba(80, 54, 30, 0.22), transparent 70%),
+    linear-gradient(180deg, #0f0a06, #080604);
+  box-shadow:
+    inset 0 3px 18px rgba(0, 0, 0, 0.9),
+    inset 0 -1px 0 rgba(255, 240, 210, 0.04),
+    0 1px 0 rgba(255, 240, 210, 0.04);
+}
+
+.lamp-row {
+  display: flex;
+  justify-content: center;
+  gap: 11px;
+}
+
+.lamp-row + .lamp-row {
+  margin-top: 9px;
+}
+
+.lamp {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border: 1px solid #4a3822;
+  border-radius: 50%;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: #948066;
+  background:
+    radial-gradient(circle at 42% 32%, #332517 0%, #1b120b 48%, #0b0704 100%);
+  box-shadow:
+    inset 0 2px 5px rgba(0, 0, 0, 0.9),
+    0 0 0 3px rgba(0, 0, 0, 0.3),
+    0 0 0 4px rgba(212, 175, 105, 0.09);
+  transition: color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+}
+
+.lamp.is-lit {
+  color: #2c1804;
+  border-color: #d89a45;
+  background:
+    radial-gradient(circle at 50% 38%, #fff8dd 0%, #ffd27f 38%, #ffac4b 64%, #c66c13 88%);
+  box-shadow:
+    0 0 16px 3px rgba(255, 166, 66, 0.55),
+    0 0 42px 10px rgba(255, 140, 40, 0.18),
+    inset 0 1px 1px rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Keys */
+
+.keyboard-wrap {
+  position: relative;
+  z-index: 1;
+  padding: 10px 22px 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.55);
+  background:
+    radial-gradient(120% 140% at 50% -20%, rgba(106, 68, 38, 0.26), transparent 65%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.34));
+  box-shadow: inset 0 1px 0 rgba(255, 235, 200, 0.05);
+}
+
+.section-label--keys {
+  margin-top: 6px;
+}
+
+.keyboard {
+  padding: 2px 0;
+}
+
+.key-row {
+  display: flex;
+  justify-content: center;
+  gap: 9px;
+}
+
+.key-row + .key-row {
+  margin-top: 9px;
+}
+
+.key {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  flex: none;
+  border: 1px solid #6d5737;
+  border-radius: 50%;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 700;
+  color: #271b0e;
+  background:
+    radial-gradient(circle at 34% 27%, #fffaf0 0%, #f0e5d0 38%, #dfd0b5 65%, #c1ad8e 100%);
+  box-shadow:
+    0 4px 0 #6e5837,
+    0 5px 0 #3a2a15,
+    0 9px 13px rgba(0, 0, 0, 0.55),
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -3px 6px rgba(90, 65, 30, 0.35);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
+  transition: transform 0.055s ease, box-shadow 0.055s ease, filter 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.key::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  border: 1px solid rgba(104, 80, 44, 0.28);
+  pointer-events: none;
+}
+
+.key:hover {
+  filter: brightness(1.04);
+}
+
+.key.is-down {
+  transform: translateY(4px);
+  box-shadow:
+    0 0 0 #6e5837,
+    0 1px 0 #3a2a15,
+    0 3px 6px rgba(0, 0, 0, 0.5),
+    inset 0 1px 2px rgba(255, 255, 255, 0.7),
+    inset 0 -2px 5px rgba(90, 65, 30, 0.4);
+}
+
+.key:disabled {
+  opacity: 0.55;
+}
+
+/* Tape */
+
+.tape-bar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 22px 12px;
+  border-top: 1px dashed rgba(212, 175, 105, 0.14);
+}
+
+.tape-label {
+  flex: none;
+  font-size: 8px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.tape {
+  flex: 1;
+  min-width: 0;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 0 9px;
+  border: 1px solid #2e2114;
+  border-radius: 5px;
+  background:
+    linear-gradient(180deg, #110c07, #17110a 60%, #0e0a06);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.7);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.2em;
+  color: var(--brass);
+  scrollbar-width: none;
+}
+
+.tape::-webkit-scrollbar {
+  display: none;
+}
+
+.tape-char {
+  flex: none;
+  opacity: 0.78;
+}
+
+.tape-char.is-last {
+  color: #fff3d8;
+  opacity: 1;
+  text-shadow: 0 0 10px rgba(255, 179, 92, 0.5);
+}
+
+.tape-empty {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--faint);
+}
+
+.machine-nameplate {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 0 0 13px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 7.5px;
+  letter-spacing: 0.42em;
+  color: rgba(212, 175, 105, 0.38);
+}
+
+/* ==========================================================================
+   Small buttons
+   ========================================================================== */
+
+.mini-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  flex: none;
+  padding: 5px 9px;
+  border: 1px solid rgba(212, 175, 105, 0.2);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--muted);
+  font-size: 9.5px;
+  letter-spacing: 0.03em;
+  transition: border-color 0.18s ease, color 0.18s ease, background 0.18s ease;
+}
+
+.mini-btn:hover {
+  border-color: var(--line-strong);
+  color: var(--brass-bright);
+  background: rgba(212, 175, 105, 0.08);
+}
+
+.link-btn {
+  padding: 0;
+  color: var(--brass);
+  font-size: 10px;
+  border-bottom: 1px solid rgba(212, 175, 105, 0.25);
+}
+
+.link-btn:hover {
+  color: var(--brass-bright);
+  border-bottom-color: var(--brass-bright);
+}
+
+.secondary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 11px;
+  border: 1px solid rgba(212, 175, 105, 0.24);
+  border-radius: 7px;
+  background: rgba(212, 175, 105, 0.055);
+  color: var(--text);
+  font-size: 10.5px;
+  letter-spacing: 0.03em;
+  transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease;
+}
+
+.secondary-btn:hover {
+  border-color: rgba(212, 175, 105, 0.5);
+  background: rgba(212, 175, 105, 0.1);
+  color: var(--brass-bright);
+}
+
+.primary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 9px 12px;
+  border: 1px solid #7d5a26;
+  border-radius: 7px;
+  background: linear-gradient(180deg, #e8ca87 0%, #c99c4c 56%, #a97a31 100%);
+  color: #241503;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.45) inset,
+    0 8px 16px -9px rgba(0, 0, 0, 0.9);
+  transition: filter 0.15s ease, transform 0.06s ease;
+}
+
+.primary-btn:hover {
+  filter: brightness(1.06);
+}
+
+.primary-btn:active {
+  transform: translateY(1px);
+}
+
+.primary-btn:disabled {
+  filter: grayscale(0.35) brightness(0.75);
+  cursor: wait;
+}
+
+.primary-btn kbd {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 600;
+  padding: 1px 3px;
+  border-radius: 3px;
+  border: 1px solid rgba(40, 24, 4, 0.25);
+  background: rgba(255, 255, 255, 0.22);
+  color: rgba(40, 24, 4, 0.75);
+}
+
+/* ==========================================================================
+   Plugboard
+   ========================================================================== */
+
+.plugboard-panel .panel-head {
+  align-items: center;
+}
+
+.plugboard {
+  position: relative;
+  margin-top: 14px;
+  padding: 26px 18px;
+  overflow: hidden;
+  border: 1px solid #2d2115;
+  border-radius: 12px;
+  background:
+    radial-gradient(100% 100% at 50% 0%, rgba(84, 56, 32, 0.2), transparent 62%),
+    linear-gradient(180deg, #120d08 0%, #1a120b 48%, #0e0906 100%);
+  box-shadow:
+    inset 0 2px 20px rgba(0, 0, 0, 0.65),
+    0 1px 0 rgba(255, 240, 210, 0.04);
+}
+
+.plugboard::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px dashed rgba(212, 175, 105, 0.1);
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.plugboard.is-empty::after {
+  content: "点击两个字母 · 接通一对线";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 0;
+  padding: 5px 14px;
+  border: 1px dashed rgba(212, 175, 105, 0.16);
+  border-radius: 999px;
+  background: rgba(10, 7, 4, 0.55);
+  color: rgba(212, 175, 105, 0.34);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.cables {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cable {
+  fill: none;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  opacity: 0.8;
+  filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.7));
+}
+
+.cable-halo {
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: round;
+  opacity: 0.12;
+}
+
+.plug-rows {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(13, minmax(0, 1fr));
+  gap: 66px 7px;
+}
+
+.plug {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  max-width: 45px;
+  aspect-ratio: 1;
+  justify-self: center;
+  border: 1px solid #5a4427;
+  border-radius: 50%;
+  color: var(--cream);
+  background:
+    radial-gradient(circle at 38% 28%, #302317 0%, #1c130c 46%, #0c0805 100%);
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.9),
+    0 1px 0 rgba(255, 240, 210, 0.07);
+  transition: border-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease, transform 0.12s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.plug::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1px solid rgba(212, 175, 105, 0.16);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.plug:hover {
+  border-color: rgba(242, 216, 160, 0.6);
+  color: #fff8e9;
+  transform: translateY(-1px);
+}
+
+.plug-letter {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.plug-mate {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 4px;
+  display: none;
+  font-family: var(--font-mono);
+  font-size: 6.5px;
+  line-height: 1;
+  color: var(--plug-color, var(--brass));
+  opacity: 0.9;
+}
+
+.plug.is-connected {
+  border-color: var(--plug-color, var(--brass));
+  color: var(--plug-color, var(--brass-bright));
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.9),
+    0 0 12px -4px var(--plug-color, var(--brass));
+}
+
+.plug.is-selected {
+  border-color: var(--amber);
+  color: var(--amber);
+  box-shadow:
+    0 0 0 3px rgba(255, 179, 92, 0.14),
+    0 0 20px -2px rgba(255, 179, 92, 0.65),
+    inset 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+.plug-footer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.plug-pairs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 22px;
+  flex: 1;
+}
+
+.plug-empty {
+  font-size: 10px;
+  color: var(--faint);
+}
+
+.plug-actions {
+  display: flex;
+  gap: 6px;
+  flex: none;
+}
+
+.plug-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 6px 3px 8px;
+  border: 1px solid rgba(212, 175, 105, 0.18);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.22);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  transition: border-color 0.18s ease, color 0.18s ease;
+}
+
+.plug-chip:hover {
+  border-color: var(--line-strong);
+  color: var(--cream);
+}
+
+.chip-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--chip-color, var(--brass));
+  box-shadow: 0 0 5px var(--chip-color, var(--brass));
+}
+
+.chip-x {
+  font-family: var(--font-ui);
+  font-size: 9px;
+  color: var(--faint);
+  padding-left: 1px;
+}
+
+.plug-chip:hover .chip-x {
+  color: var(--danger);
+}
+
+/* ==========================================================================
+   Settings
+   ========================================================================== */
+
+.rotor-controls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 15px;
+}
+
+.rc {
+  padding: 9px;
+  border: 1px solid rgba(212, 175, 105, 0.14);
+  border-radius: 9px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.rc-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 5px;
+  margin-bottom: 8px;
+  padding-bottom: 7px;
+  border-bottom: 1px dashed rgba(212, 175, 105, 0.13);
+}
+
+.rc-side {
+  font-size: 8.5px;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+}
+
+.rc-roman {
+  font-family: var(--font-display);
+  font-size: 13px;
+  color: var(--brass-bright);
+}
+
+.rc-field {
+  display: block;
+  margin-top: 8px;
+}
+
+.rc-field > span {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px;
+  margin-bottom: 4px;
+  font-size: 8px;
+  letter-spacing: 0.06em;
+  color: var(--faint);
+}
+
+.rc-field > span i {
+  font-style: normal;
+  font-family: var(--font-display);
+  font-size: 8px;
+  color: var(--brass-dim);
+}
+
+.rc select {
+  width: 100%;
+  padding: 5px 5px;
+  border: 1px solid #392a19;
+  border-radius: 5px;
+  background: #0e0a06;
+  color: var(--cream);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  outline: none;
+  transition: border-color 0.18s ease;
+}
+
+.rc select:hover,
+.rc select:focus {
+  border-color: rgba(212, 175, 105, 0.45);
+}
+
+.rc select option {
+  background: #120d08;
+  color: var(--cream);
+}
+
+.stepper {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid #392a19;
+  border-radius: 5px;
+  background: #0e0a06;
+  overflow: hidden;
+}
+
+.stepper button {
+  width: 21px;
+  flex: none;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.stepper button:hover {
+  background: rgba(212, 175, 105, 0.13);
+  color: var(--brass-bright);
+}
+
+.stepper b {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  padding: 4px 0;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--cream);
+}
+
+.reflector-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 13px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(212, 175, 105, 0.1);
+}
+
+.control-label {
+  font-size: 8.5px;
+  letter-spacing: 0.18em;
+  color: var(--faint);
+}
+
+.segmented {
+  display: inline-flex;
+  padding: 2px;
+  border: 1px solid #362717;
+  border-radius: 6px;
+  background: #0d0906;
+}
+
+.segmented button {
+  padding: 3px 12px;
+  border-radius: 4px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.segmented button:hover {
+  color: var(--cream);
+}
+
+.segmented button.is-active {
+  background: linear-gradient(180deg, #d9b676, #b78a43);
+  color: #231608;
+  font-weight: 700;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) inset;
+}
+
+.reflector-note {
+  margin-left: auto;
+  font-size: 8.5px;
+  color: var(--faint);
+}
+
+.settings-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.key-sheet {
+  margin-top: 13px;
+  padding-top: 11px;
+  border-top: 1px solid rgba(212, 175, 105, 0.1);
+}
+
+.key-sheet summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  list-style: none;
+  cursor: pointer;
+  font-size: 10px;
+  color: var(--muted);
+  user-select: none;
+}
+
+.key-sheet summary::-webkit-details-marker {
+  display: none;
+}
+
+.key-sheet summary::before {
+  content: "+";
+  display: inline-grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  margin-right: 6px;
+  border: 1px solid rgba(212, 175, 105, 0.2);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--brass);
+  line-height: 1;
+}
+
+.key-sheet[open] summary::before {
+  content: "−";
+}
+
+.key-sheet summary > span:first-child {
+  flex: 1;
+}
+
+.summary-hint {
+  font-size: 8px;
+  letter-spacing: 0.05em;
+  color: var(--faint);
+}
+
+.key-sheet pre {
+  margin: 9px 0 8px;
+  padding: 10px 11px;
+  overflow-x: auto;
+  border: 1px solid rgba(212, 175, 105, 0.13);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.26);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.75;
+  color: var(--brass-bright);
+  white-space: pre;
+}
+
+.key-sheet-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   Message panel
+   ========================================================================== */
+
+.message-input-wrap {
+  margin-top: 14px;
+}
+
+#messageInput {
+  display: block;
+  width: 100%;
+  min-height: 78px;
+  max-height: 240px;
+  resize: vertical;
+  padding: 10px 12px;
+  border: 1px solid #392a19;
+  border-radius: 8px;
+  background: #0c0906;
+  color: var(--cream);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.6;
+  letter-spacing: 0.05em;
+  outline: none;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.55);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+#messageInput::placeholder {
+  color: #5c4e3c;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+
+#messageInput:focus {
+  border-color: rgba(212, 175, 105, 0.55);
+  box-shadow:
+    inset 0 2px 10px rgba(0, 0, 0, 0.55),
+    0 0 0 3px rgba(212, 175, 105, 0.09);
+}
+
+.input-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 5px;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  color: var(--faint);
+}
+
+.message-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 0.8fr);
+  gap: 7px;
+  margin-top: 9px;
+}
+
+.output-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 16px 0 6px;
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.output-meta {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--brass-dim);
+  text-align: right;
+}
+
+.output {
+  min-height: 78px;
+  max-height: 230px;
+  overflow: auto;
+  padding: 12px 14px;
+  border: 1px solid #2f2215;
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, #0b0805, #100b07);
+  box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.62);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  line-height: 1.8;
+  letter-spacing: 0.22em;
+  color: var(--brass-bright);
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.output.is-empty {
+  display: grid;
+  place-items: center start;
+  min-height: 78px;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--faint);
+}
+
+.output.is-running {
+  border-color: rgba(255, 179, 92, 0.35);
+  box-shadow:
+    inset 0 2px 12px rgba(0, 0, 0, 0.62),
+    0 0 0 1px rgba(255, 179, 92, 0.06);
+}
+
+.output-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: var(--muted);
+  cursor: pointer;
+  user-select: none;
+}
+
+.check input {
+  width: 13px;
+  height: 13px;
+  margin: 0;
+  accent-color: var(--brass);
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   Trace
+   ========================================================================== */
+
+.trace-panel .panel-head {
+  align-items: center;
+}
+
+.trace {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-top: 12px;
+}
+
+.trace-empty {
+  margin: 0;
+  padding: 8px 0 4px;
+  font-size: 10.5px;
+  line-height: 1.7;
+  color: var(--faint);
+}
+
+.trace-row {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  padding: 4px 7px;
+  border-left: 2px solid transparent;
+  border-radius: 4px;
+  opacity: 0;
+  transform: translateX(-4px);
+  animation: trace-in 0.24s ease forwards;
+  animation-delay: calc(var(--i) * 16ms);
+}
+
+.trace-row:nth-child(odd) {
+  background: rgba(255, 255, 255, 0.016);
+}
+
+.trace-row[data-direction="forward"] {
+  border-left-color: rgba(212, 175, 105, 0.35);
+}
+
+.trace-row[data-direction="backward"] {
+  border-left-color: rgba(127, 183, 176, 0.4);
+}
+
+@keyframes trace-in {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.trace-stage {
+  overflow: hidden;
+  font-size: 9px;
+  letter-spacing: 0.03em;
+  color: var(--faint);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trace-stage b {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.trace-path {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+}
+
+.trace-path .from {
+  color: var(--muted);
+}
+
+.trace-path .to {
+  color: var(--brass-bright);
+  font-weight: 600;
+}
+
+.trace-row[data-kind="plug"] .trace-path .to {
+  color: var(--violet);
+}
+
+.trace-row[data-kind="lamp"] .trace-path .to {
+  color: var(--amber);
+  text-shadow: 0 0 10px rgba(255, 179, 92, 0.55);
+}
+
+.trace-row[data-direction="backward"] .trace-path .to {
+  color: #a8d4cd;
+}
+
+.trace.is-quick .trace-row {
+  animation-duration: 0.09s;
+  animation-delay: 0ms;
+}
+
+.arrow {
+  color: var(--brass-dim);
+  font-family: var(--font-ui);
+  font-size: 10px;
+}
+
+.trace-log {
+  margin-top: 13px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(212, 175, 105, 0.1);
+}
+
+.trace-log summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  list-style: none;
+  cursor: pointer;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.trace-log summary::-webkit-details-marker {
+  display: none;
+}
+
+.trace-log summary::before {
+  content: "+";
+  display: inline-grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  margin-right: 6px;
+  border: 1px solid rgba(212, 175, 105, 0.2);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--brass);
+  line-height: 1;
+}
+
+.trace-log[open] summary::before {
+  content: "−";
+}
+
+.trace-log summary > span:first-child {
+  flex: 1;
+}
+
+.log-scroll {
+  max-height: 200px;
+  margin-top: 8px;
+  overflow: auto;
+  border: 1px solid rgba(212, 175, 105, 0.1);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.log-scroll table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+}
+
+.log-scroll th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 5px 7px;
+  text-align: left;
+  font-weight: 500;
+  color: var(--faint);
+  background: #15100b;
+  border-bottom: 1px solid rgba(212, 175, 105, 0.12);
+}
+
+.log-scroll td {
+  padding: 4px 7px;
+  color: var(--muted);
+  border-top: 1px solid rgba(255, 255, 255, 0.035);
+}
+
+.log-scroll td.out {
+  color: var(--brass-bright);
+}
+
+.log-scroll td.pos {
+  letter-spacing: 0.12em;
+  color: var(--faint);
+}
+
+.log-empty {
+  padding: 10px !important;
+  text-align: center;
+  color: var(--faint) !important;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.site-footer {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 32px 42px;
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: #5f5343;
+}
+
+/* ==========================================================================
+   Help dialog
+   ========================================================================== */
+
+.help-dialog {
+  width: min(760px, calc(100vw - 32px));
+  max-height: min(88vh, 900px);
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(212, 175, 105, 0.35);
+  border-radius: 18px;
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(110, 72, 38, 0.24), transparent 60%),
+    linear-gradient(160deg, #1a140e, #0f0b07 70%);
+  color: var(--text);
+  box-shadow:
+    0 40px 120px rgba(0, 0, 0, 0.85),
+    0 0 0 1px rgba(0, 0, 0, 0.6);
+}
+
+.help-dialog::backdrop {
+  background: rgba(4, 3, 2, 0.72);
+  backdrop-filter: blur(6px);
+}
+
+.help-dialog[open] {
+  animation: dialog-in 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+}
+
+.dialog-inner {
+  max-height: min(88vh, 900px);
+  overflow-y: auto;
+  padding: 30px 32px 34px;
+}
+
+.dialog-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(212, 175, 105, 0.22);
+  border-radius: 50%;
+  color: var(--muted);
+  transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.dialog-close:hover {
+  color: var(--cream);
+  border-color: var(--line-strong);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.help-dialog h2 {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.help-dialog h3 {
+  margin: 26px 0 10px;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--brass-bright);
+}
+
+.help-dialog h3::before {
+  content: "";
+  display: inline-block;
+  width: 3px;
+  height: 12px;
+  margin-right: 9px;
+  background: var(--brass-dim);
+  border-radius: 2px;
+  vertical-align: -1px;
+}
+
+.help-lead {
+  margin: 0;
+  max-width: 62ch;
+  font-size: 12.5px;
+  line-height: 1.85;
+  color: var(--muted);
+}
+
+.help-lead strong {
+  color: var(--cream);
+  font-weight: 600;
+}
+
+.steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.steps li {
+  position: relative;
+  margin-bottom: 10px;
+  padding-left: 36px;
+  font-size: 11.5px;
+  line-height: 1.75;
+  color: var(--muted);
+  counter-increment: step;
+}
+
+.steps li b {
+  display: inline;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.steps li::before {
+  content: counter(step, decimal-leading-zero);
+  position: absolute;
+  top: 1px;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 23px;
+  height: 23px;
+  border: 1px solid rgba(212, 175, 105, 0.3);
+  border-radius: 50%;
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  color: var(--brass);
+  background: rgba(212, 175, 105, 0.05);
+}
+
+.help-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 10px;
+}
+
+.help-card {
+  padding: 13px 14px;
+  border: 1px solid rgba(212, 175, 105, 0.14);
+  border-radius: 9px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.help-card h4 {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--brass);
+}
+
+.help-card p {
+  margin: 0;
+  font-size: 10.5px;
+  line-height: 1.75;
+  color: var(--muted);
+}
+
+.help-card b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.shortcut-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+.shortcut-table td {
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.045);
+  color: var(--muted);
+}
+
+.shortcut-table td:first-child {
+  width: 190px;
+  color: var(--text);
+}
+
+kbd {
+  display: inline-block;
+  min-width: 18px;
+  padding: 1px 4px;
+  border: 1px solid rgba(212, 175, 105, 0.22);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  text-align: center;
+  color: var(--brass-bright);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+.help-note {
+  margin: 0;
+  padding: 11px 13px;
+  border-left: 2px solid rgba(212, 175, 105, 0.32);
+  background: rgba(212, 175, 105, 0.04);
+  font-size: 10.5px;
+  line-height: 1.75;
+  color: var(--muted);
+}
+
+.self-test {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 14px;
+  align-items: center;
+  margin-top: 24px;
+  padding: 15px 16px;
+  border: 1px solid rgba(127, 183, 176, 0.22);
+  border-radius: 10px;
+  background: rgba(127, 183, 176, 0.045);
+}
+
+.self-test h4 {
+  margin: 0 0 4px;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #a8d4cd;
+}
+
+.self-test p {
+  margin: 0;
+  font-size: 10px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.self-test code {
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.32);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--brass-bright);
+}
+
+.self-test .secondary-btn {
+  border-color: rgba(127, 183, 176, 0.3);
+}
+
+.self-test-result {
+  grid-column: 1 / -1;
+  font-family: var(--font-mono);
+  font-size: 9.5px !important;
+  color: var(--faint) !important;
+}
+
+.self-test-result[data-state="pass"] {
+  color: #9ed4b7 !important;
+}
+
+.self-test-result[data-state="fail"] {
+  color: var(--danger) !important;
+}
+
+/* ==========================================================================
+   Toasts
+   ========================================================================== */
+
+.toasts {
+  position: fixed;
+  left: 50%;
+  bottom: 26px;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  padding: 9px 15px;
+  border: 1px solid rgba(212, 175, 105, 0.35);
+  border-radius: 8px;
+  background: rgba(22, 16, 10, 0.96);
+  color: var(--cream);
+  font-size: 11px;
+  line-height: 1.5;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.72);
+  animation: toast-in 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
+  backdrop-filter: blur(8px);
+}
+
+.toast::before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 7px var(--amber);
+}
+
+.toast.is-error {
+  border-color: rgba(224, 131, 107, 0.45);
+}
+
+.toast.is-error::before {
+  background: var(--danger);
+  box-shadow: 0 0 7px var(--danger);
+}
+
+.toast.is-leaving {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 1240px) {
+  .layout {
+    grid-template-columns: minmax(0, 1.2fr) minmax(370px, 0.8fr);
+  }
+
+  .key {
+    width: 48px;
+    height: 48px;
+  }
+
+  .lamp {
+    width: 34px;
+    height: 34px;
+    font-size: 11px;
+  }
+
+  .lamp-row {
+    gap: 9px;
+  }
+
+  .rotor-deck {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(82px, 0.62fr);
+    gap: 10px;
+    padding-inline: 18px;
+  }
+}
+
+@media (max-width: 1080px) {
+  .masthead {
+    max-width: 860px;
+    padding: 24px 24px 18px;
+  }
+
+  .layout {
+    max-width: 860px;
+    padding: 0 24px 34px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .column {
+    display: contents;
+  }
+
+  .machine { order: 1; }
+  .settings-panel { order: 2; }
+  .plugboard-panel { order: 3; }
+  .message-panel { order: 4; }
+  .trace-panel { order: 5; }
+
+  .key {
+    width: 52px;
+    height: 52px;
+  }
+
+  .lamp {
+    width: 37px;
+    height: 37px;
+    font-size: 11.5px;
+  }
+
+  .lamp-row {
+    gap: 10px;
+  }
+
+  .rotor-deck {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(92px, 0.72fr);
+    gap: 12px;
+    padding-inline: 22px;
+  }
+
+  .site-footer {
+    max-width: 860px;
+    padding-inline: 24px;
+  }
+}
+
+@media (max-width: 680px) {
+  .masthead {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px 18px 14px;
+  }
+
+  .brand-seal {
+    width: 50px;
+    height: 50px;
+    font-size: 25px;
+  }
+
+  .brand h1 {
+    font-size: clamp(34px, 9vw, 48px);
+  }
+
+  .tagline {
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .header-chip {
+    display: none;
+  }
+
+  .ghost-btn {
+    padding: 7px 11px;
+  }
+
+  .layout {
+    padding: 0 14px 28px;
+    gap: 14px;
+  }
+
+  .panel {
+    padding: 17px;
+    border-radius: 13px;
+  }
+
+  .machine {
+    padding: 0;
+  }
+
+  .machine-bar {
+    padding: 12px 18px;
+  }
+
+  .machine-plate {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+  }
+
+  .machine-status {
+    font-size: 8px;
+    letter-spacing: 0.1em;
+  }
+
+  .rotor-deck {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 7px;
+    padding: 12px 14px 8px;
+  }
+
+  .rotor {
+    padding: 7px 7px 9px;
+  }
+
+  .rotor-cap {
+    padding-bottom: 6px;
+    font-size: 7.5px;
+  }
+
+  .rotor-id {
+    font-size: 11px;
+  }
+
+  .rotor-window {
+    height: 78px;
+    box-shadow:
+      inset 0 10px 16px -8px rgba(0, 0, 0, 0.95),
+      inset 0 -10px 16px -8px rgba(0, 0, 0, 0.95),
+      0 0 0 2px #1d140c,
+      0 0 0 3px rgba(212, 175, 105, 0.22);
+  }
+
+  .rotor-letter {
+    font-size: 38px;
+  }
+
+  .ghost {
+    font-size: 13px;
+  }
+
+  .ghost--prev { top: 5px; }
+  .ghost--next { bottom: 5px; }
+
+  .rotor-meta {
+    padding-top: 6px;
+    font-size: 6.5px;
+    letter-spacing: 0.06em;
+  }
+
+  .rotor-meta b {
+    font-size: 8px;
+  }
+
+  .reflector-card {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    gap: 10px;
+    padding: 7px 12px;
+  }
+
+  .reflector-card::after {
+    inset: 4px;
+  }
+
+  .ref-cap {
+    font-size: 7px;
+  }
+
+  .ref-letter {
+    font-size: 21px;
+  }
+
+  .ref-name {
+    font-size: 8px;
+  }
+
+  .lamp-section {
+    padding: 8px 14px 4px;
+  }
+
+  .lampboard {
+    padding: 10px 7px;
+  }
+
+  .lamp-row {
+    gap: clamp(4px, 1.4vw, 7px);
+  }
+
+  .lamp-row + .lamp-row {
+    margin-top: 6px;
+  }
+
+  .lamp {
+    width: clamp(19px, 5.6vw, 28px);
+    height: clamp(19px, 5.6vw, 28px);
+    font-size: clamp(7px, 2.1vw, 9.5px);
+  }
+
+  .keyboard-wrap {
+    padding: 8px 10px 15px;
+  }
+
+  .key-row {
+    gap: clamp(3px, 1.2vw, 8px);
+  }
+
+  .key-row + .key-row {
+    margin-top: 7px;
+  }
+
+  .key {
+    width: clamp(25px, 8.2vw, 44px);
+    height: clamp(25px, 8.2vw, 44px);
+    font-size: clamp(9px, 2.8vw, 13px);
+    box-shadow:
+      0 3px 0 #6e5837,
+      0 4px 0 #3a2a15,
+      0 6px 9px rgba(0, 0, 0, 0.5),
+      inset 0 1px 1px rgba(255, 255, 255, 0.9);
+  }
+
+  .key::before {
+    inset: 3px;
+  }
+
+  .key.is-down {
+    transform: translateY(3px);
+  }
+
+  .tape-bar {
+    padding: 8px 14px 10px;
+  }
+
+  .tape {
+    height: 29px;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+  }
+
+  .tape-bar .mini-btn {
+    padding: 4px 6px;
+    font-size: 8.5px;
+  }
+
+  .plugboard {
+    padding: 20px 12px;
+  }
+
+  .plugboard.is-empty::after {
+    display: none;
+  }
+
+  .plug-rows {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 13px 6px;
+  }
+
+  .plug {
+    max-width: 40px;
+  }
+
+  .plug-mate {
+    display: block;
+  }
+
+  .cables {
+    display: none;
+  }
+
+  .plug-footer {
+    flex-direction: column;
+  }
+
+  .plug-actions {
+    align-self: stretch;
+  }
+
+  .plug-actions .mini-btn {
+    flex: 1;
+  }
+
+  .rotor-controls {
+    gap: 6px;
+  }
+
+  .rc {
+    padding: 7px;
+  }
+
+  .rc-field {
+    margin-top: 6px;
+  }
+
+  .stepper button {
+    width: 18px;
+  }
+
+  .stepper b {
+    font-size: 10px;
+  }
+
+  .rc select {
+    font-size: 10px;
+    padding-inline: 3px;
+  }
+
+  .message-actions {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .message-actions .primary-btn {
+    grid-column: 1 / -1;
+  }
+
+  .output {
+    font-size: 14px;
+    letter-spacing: 0.16em;
+  }
+
+  .trace-row {
+    grid-template-columns: 72px minmax(0, 1fr);
+  }
+
+  .dialog-inner {
+    padding: 26px 20px 28px;
+  }
+
+  .help-dialog h2 {
+    font-size: 25px;
+  }
+
+  .help-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .shortcut-table td:first-child {
+    width: 140px;
+  }
+
+  .self-test {
+    grid-template-columns: 1fr;
+  }
+
+  .self-test .secondary-btn {
+    justify-self: start;
+  }
+
+  .site-footer {
+    padding: 0 18px 30px;
+    font-size: 8.5px;
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+@media (max-width: 390px) {
+  .brand-seal {
+    display: none;
+  }
+
+  .rotor-meta span:first-child {
+    display: none;
+  }
+
+  .plug {
+    max-width: 36px;
+  }
+
+  .plug-rows {
+    gap: 10px 4px;
+  }
+
+  .message-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .message-actions .primary-btn {
+    grid-column: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+</style>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <a class="skip-link" href="#messageInput">跳到报文输入</a>
+
+  <header class="masthead">
+    <div class="brand">
+      <div class="brand-seal" aria-hidden="true">E</div>
+      <div class="brand-text">
+        <p class="kicker">Chiffriermaschine · 1930</p>
+        <h1>ENIGMA <em>I</em></h1>
+        <p class="tagline">三转子密码机 · 浏览器互动复刻</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span class="header-chip" title="当前反射器">UKW <b data-header-ukw>B</b></span>
+      <button type="button" class="ghost-btn" data-action="sound" aria-pressed="true">
+        <svg class="icon icon--sound-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>
+        <svg class="icon icon--sound-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="m17 9 5 5m0-5-5 5"/></svg>
+        <span data-sound-label>音效开</span>
+      </button>
+      <button type="button" class="ghost-btn" data-action="help">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.6 2.6 0 1 1 3.7 2.4c-.8.4-1.2 1-1.2 1.9"/><path d="M12 17h.01"/></svg>
+        <span>操作说明</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <div class="column column--main">
+      <section class="panel machine" aria-label="恩格玛机操作台">
+        <span class="screw screw--tl" aria-hidden="true"></span>
+        <span class="screw screw--tr" aria-hidden="true"></span>
+        <span class="screw screw--bl" aria-hidden="true"></span>
+        <span class="screw screw--br" aria-hidden="true"></span>
+
+        <div class="machine-bar">
+          <span class="machine-plate">ENIGMA <i>I</i></span>
+          <span class="machine-status" id="machineStatus">
+            <i class="led" aria-hidden="true"></i>
+            <span data-status>待命 · BEREIT</span>
+          </span>
+        </div>
+
+        <div class="rotor-deck" id="rotorDeck"></div>
+
+        <div class="lamp-section">
+          <p class="section-label"><span>Lampenfeld</span> 灯板</p>
+          <div class="lampboard" id="lampboard"></div>
+        </div>
+
+        <div class="keyboard-wrap">
+          <p class="section-label section-label--keys"><span>Tastatur</span> 键盘</p>
+          <div class="keyboard" id="keyboard"></div>
+        </div>
+
+        <div class="tape-bar">
+          <span class="tape-label">纸带</span>
+          <div class="tape" id="tape" aria-label="实时输出纸带">
+            <span class="tape-empty">按下按键开始加密…</span>
+          </div>
+          <button type="button" class="mini-btn" data-action="copy-tape">复制</button>
+          <button type="button" class="mini-btn" data-action="clear-tape">清空</button>
+        </div>
+
+        <p class="machine-nameplate">CHIFFRIERMASCHINE · M3</p>
+      </section>
+
+      <section class="panel plugboard-panel" aria-labelledby="plugTitle">
+        <div class="panel-head">
+          <div class="panel-heading">
+            <p class="panel-kicker">Steckerbrett</p>
+            <h2 id="plugTitle">插线板</h2>
+          </div>
+          <span class="chip chip--count" data-plug-count>0 / 10 对</span>
+        </div>
+
+        <div class="plugboard" id="plugboard">
+          <svg class="cables" id="cables" aria-hidden="true"></svg>
+          <div class="plug-rows" id="plugRows"></div>
+        </div>
+
+        <div class="plug-footer">
+          <div class="plug-pairs" id="plugPairs"><span class="plug-empty">尚未插线 — 点击两个字母建立连线</span></div>
+          <div class="plug-actions">
+            <button type="button" class="mini-btn" data-action="random-plugs">随机插线</button>
+            <button type="button" class="mini-btn" data-action="clear-plugs">全部拔除</button>
+          </div>
+        </div>
+        <p class="hint-line">插线板在电流进入和离开转子组时各交换一次字母。点击已连接的字母可拔除该线。</p>
+      </section>
+    </div>
+
+    <div class="column column--side">
+      <section class="panel settings-panel" aria-labelledby="settingsTitle">
+        <div class="panel-head">
+          <div class="panel-heading">
+            <p class="panel-kicker">Walzenlage · Ringstellung</p>
+            <h2 id="settingsTitle">密钥设置</h2>
+          </div>
+          <span class="chip" data-key-badge>I · II · III</span>
+        </div>
+
+        <div class="rotor-controls" id="rotorControls"></div>
+
+        <div class="reflector-row">
+          <span class="control-label">反射器</span>
+          <div class="segmented" id="reflectorControl" role="group" aria-label="选择反射器">
+            <button type="button" data-reflector="B" class="is-active" aria-pressed="true">B</button>
+            <button type="button" data-reflector="C" aria-pressed="false">C</button>
+          </div>
+          <span class="reflector-note" data-reflector-note>标准接线</span>
+        </div>
+
+        <div class="settings-actions">
+          <button type="button" class="secondary-btn" data-action="reset-pos">
+            <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10a8 8 0 1 1 2.3 6.3"/><path d="M4 4v6h6"/></svg>
+            转子复位
+          </button>
+          <button type="button" class="secondary-btn" data-action="random-key">
+            <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9h.01M15 9h.01M9 15h.01M15 15h.01M12 12h.01"/></svg>
+            随机密钥
+          </button>
+        </div>
+
+        <details class="key-sheet" id="keySheet">
+          <summary><span>当前密钥单</span><span class="summary-hint">展开 / 收起</span></summary>
+          <pre id="keySheetText"></pre>
+          <div class="key-sheet-actions">
+            <button type="button" class="mini-btn" data-action="copy-key">复制密钥单</button>
+            <button type="button" class="mini-btn" data-action="share-key">复制分享链接</button>
+          </div>
+        </details>
+
+        <p class="hint-line">「起始位置」是每条报文开始时的转子窗口字母，更改后会立即复位转子；环设置以 01–26 对应 A–Z。转子下拉框中的第二个字母是该型号的缺口。</p>
+      </section>
+
+      <section class="panel message-panel" aria-labelledby="messageTitle">
+        <div class="panel-head">
+          <div class="panel-heading">
+            <p class="panel-kicker">Funktelegramm</p>
+            <h2 id="messageTitle">报文</h2>
+          </div>
+          <span class="chip">A ↔ Z 对合</span>
+        </div>
+
+        <div class="message-input-wrap">
+          <label class="sr-only" for="messageInput">输入明文或密文</label>
+          <textarea id="messageInput" rows="3" spellcheck="false" autocomplete="off"
+            placeholder="在此粘贴明文或密文；也可以直接按机器键盘逐字加密。"></textarea>
+          <div class="input-meta">
+            <span data-char-count>0 个字母</span>
+            <button type="button" class="link-btn" data-action="paste">从剪贴板粘贴</button>
+          </div>
+        </div>
+
+        <div class="message-actions">
+          <button type="button" class="primary-btn" data-action="run">
+            <span data-run-label>运行加密 / 解密</span>
+            <kbd>Ctrl</kbd><kbd>↵</kbd>
+          </button>
+          <button type="button" class="secondary-btn" data-action="use-output">输出作输入</button>
+          <button type="button" class="secondary-btn" data-action="clear-message">清空</button>
+        </div>
+
+        <div class="output-head">
+          <span>输出</span>
+          <span class="output-meta" data-output-meta>等待输入</span>
+        </div>
+        <div class="output is-empty" id="output" aria-label="加密输出">—</div>
+
+        <div class="output-actions">
+          <label class="check">
+            <input type="checkbox" data-action="grouping" checked>
+            <span>5 字分组</span>
+          </label>
+          <button type="button" class="mini-btn" data-action="copy-output">复制输出</button>
+        </div>
+
+        <p class="hint-line">恩格玛机是自反的：同一密钥与起始位置下，加密和解密是同一个操作。「运行」会先把转子复位到起始位置；机器按键则从当前位置继续。</p>
+      </section>
+
+      <section class="panel trace-panel" aria-labelledby="traceTitle">
+        <div class="panel-head">
+          <div class="panel-heading">
+            <p class="panel-kicker">Stromweg</p>
+            <h2 id="traceTitle">信号路径</h2>
+          </div>
+          <span class="chip" data-trace-pos>—</span>
+        </div>
+
+        <div class="trace" id="trace">
+          <p class="trace-empty">按下一个键，查看电流如何穿过插线板、三只转子和反射器。金色表示去程，青色表示回程。</p>
+        </div>
+
+        <details class="trace-log" id="traceLog">
+          <summary><span>逐字日志</span><span class="summary-hint" data-log-count>0 条</span></summary>
+          <div class="log-scroll">
+            <table>
+              <thead>
+                <tr><th>#</th><th>输入</th><th>输出</th><th>转子位置</th></tr>
+              </thead>
+              <tbody id="logBody"></tbody>
+            </table>
+          </div>
+        </details>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <span>ENIGMA I (M3) · 按历史接线表与步进机构复刻</span>
+    <span>仅用于历史演示与学习 · 不构成现实加密方案</span>
+  </footer>
+
+  <dialog class="help-dialog" id="helpDialog" aria-labelledby="helpTitle">
+    <button type="button" class="dialog-close" data-action="close-help" aria-label="关闭说明">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+    </button>
+    <div class="dialog-inner">
+      <p class="panel-kicker">Operating Instructions</p>
+      <h2 id="helpTitle">操作说明</h2>
+      <p class="help-lead">这是一台按历史接线表复刻的 <strong>Enigma I（M3）</strong>。电流从按键出发，经过插线板、三只转子、反射器，再原路折返点亮灯板。同一个密钥下，加密与解密互为逆运算。</p>
+
+      <h3>快速开始</h3>
+      <ol class="steps">
+        <li><b>设置密钥。</b>在「密钥设置」中选择三只转子的顺序、环设置与起始位置；也可以点「随机密钥」生成一整套。</li>
+        <li><b>插线。</b>在插线板上依次点击两个字母即可连成一对，最多 10 对；点击已连接的字母可拔除。</li>
+        <li><b>输入。</b>在「报文」中粘贴明文或密文后运行；或直接敲击电脑键盘、点击机器按键逐字加密。</li>
+        <li><b>解密。</b>使用完全相同的转子顺序、环设置、起始位置和插线，把密文作为输入再次运行。</li>
+      </ol>
+
+      <h3>三个容易混淆的地方</h3>
+      <div class="help-grid">
+        <article class="help-card">
+          <h4>位置与环设置</h4>
+          <p><b>位置（Pos）</b>是转子窗口里的字母，也就是当前电路状态；<b>环设置（Ring）</b>决定字母环相对内部接线的偏移。两者都会改变结果，但只有位置会在按键时前进。</p>
+        </article>
+        <article class="help-card">
+          <h4>双步进</h4>
+          <p>右转子每按一次必转。当右转子停在缺口上，中转子进位；而当中转子自己停在缺口上时，会带着左转子一起转——这就是著名的 <b>double stepping</b>。</p>
+        </article>
+        <article class="help-card">
+          <h4>插线板</h4>
+          <p>每条线交换两个字母，并在电流往返时各生效一次。10 对线让密钥空间增加约 <b>1.5 × 10<sup>14</sup></b> 种组合，是战前后期最重要的加强措施之一。</p>
+        </article>
+      </div>
+
+      <h3>快捷键</h3>
+      <table class="shortcut-table">
+        <tbody>
+          <tr><td><kbd>A</kbd>–<kbd>Z</kbd></td><td>逐字加密（焦点不在输入框时）</td></tr>
+          <tr><td><kbd>Ctrl</kbd>+<kbd>Enter</kbd></td><td>运行整段报文</td></tr>
+          <tr><td><kbd>Esc</kbd></td><td>关闭本说明</td></tr>
+        </tbody>
+      </table>
+
+      <h3>关于准确度</h3>
+      <p class="help-note">转子 I–V 的接线与缺口、UKW-B/C 反射器、三转子步进和双步进均按 Enigma I 的历史数据实现；不包含海军 M4 的四转子、薄反射器、Uhr 或特殊军用改装。它是一台教学用复刻机，不是现实可用的密码工具。</p>
+
+      <div class="self-test">
+        <div>
+          <h4>已知向量自检</h4>
+          <p>转子 I·II·III，UKW-B，环设置与起始位置全部为 A，无插线：<code>AAAAA</code> 应当得到 <code>BDZGO</code>。</p>
+        </div>
+        <button type="button" class="secondary-btn" data-action="self-test">运行自检</button>
+        <p class="self-test-result" id="selfTestResult" role="status">等待运行</p>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+  <p class="sr-only" id="srStatus" aria-live="polite"></p>
+
+  <script>
+/*
+ * enigma-core.js — a faithful software model of the Enigma I (M3)
+ *
+ * Rotor wiring, notches, reflectors and the stepping mechanism follow the
+ * historical Wehrmacht machine:
+ *   - five exchangeable rotors (I–V) with ring settings (Ringstellung)
+ *   - reflectors B and C (UKW-B / UKW-C)
+ *   - a 26-jack plugboard with up to 10 cables (Steckerbrett)
+ *   - the famous double step of the middle rotor
+ *
+ * The model is pure: it has no DOM dependencies, so it can be unit tested in
+ * Node and reused anywhere.
+ */
+(function (root, factory) {
+  'use strict';
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else root.Enigma = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  'use strict';
+
+  const LETTER_A = 65;
+  const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+  const mod = (n, m) => ((n % m) + m) % m;
+  const toIndex = (letter) => letter.charCodeAt(0) - LETTER_A;
+  const toLetter = (index) => String.fromCharCode(LETTER_A + mod(index, 26));
+
+  /* Historical wiring, left to right as seen from the operator's side.
+     The notch letter is the window letter at which a rotor turns over. */
+  const ROTOR_DATA = {
+    I: { wiring: 'EKMFLGDQVZNTOWYHXUSPAIBRCJ', notch: 'Q' },
+    II: { wiring: 'AJDKSIRUXBLHWTMCQGZNPYFVOE', notch: 'E' },
+    III: { wiring: 'BDFHJLCPRTXVZNYEIWGAKMUSQO', notch: 'V' },
+    IV: { wiring: 'ESOVPZJAYQUIRHXLNFTGKDCMWB', notch: 'J' },
+    V: { wiring: 'VZBRGITYUPSDNHLXAWMJQOFECK', notch: 'Z' },
+  };
+
+  const REFLECTOR_DATA = {
+    B: 'YRUHQSLDPXNGOKMIEBFZCWVJAT',
+    C: 'FVPJIAOYEDRZXWGCTKUQSBNMHL',
+  };
+
+  const ROTOR_IDS = Object.keys(ROTOR_DATA);
+  const REFLECTOR_IDS = Object.keys(REFLECTOR_DATA);
+  const MAX_PLUGS = 10;
+
+  function invert(wiring) {
+    const inverse = new Array(26);
+    for (let i = 0; i < 26; i += 1) inverse[toIndex(wiring[i])] = i;
+    return inverse;
+  }
+
+  const ROTORS = Object.create(null);
+  ROTOR_IDS.forEach((id) => {
+    const { wiring, notch } = ROTOR_DATA[id];
+    ROTORS[id] = Object.freeze({
+      id,
+      wiring,
+      notch,
+      notchIndex: toIndex(notch),
+      forward: Object.freeze(Array.from(wiring, toIndex)),
+      backward: Object.freeze(invert(wiring)),
+    });
+  });
+
+  const REFLECTORS = Object.create(null);
+  REFLECTOR_IDS.forEach((id) => {
+    REFLECTORS[id] = Object.freeze({
+      id,
+      wiring: REFLECTOR_DATA[id],
+      map: Object.freeze(Array.from(REFLECTOR_DATA[id], toIndex)),
+    });
+  });
+
+  function isLetter(value) {
+    return typeof value === 'string' && /^[A-Za-z]$/.test(value);
+  }
+
+  function normalizeLetter(value) {
+    if (typeof value === 'number' && Number.isInteger(value)) return toLetter(value);
+    if (isLetter(value)) return value.toUpperCase();
+    throw new Error('Expected a single letter A–Z, got: ' + String(value));
+  }
+
+  function normalizeTriplet(value, fallback) {
+    let source = value == null ? fallback : value;
+    if (typeof source === 'string') {
+      if (!/^[A-Za-z]{3}$/.test(source)) {
+        throw new Error('Expected three letters, got: ' + source);
+      }
+      source = Array.from(source.toUpperCase());
+    }
+    if (!Array.isArray(source) || source.length !== 3) {
+      throw new Error('Expected an array or string of three letters');
+    }
+    return source.map(normalizeLetter);
+  }
+
+  function normalizePlugboard(value) {
+    let pairs = [];
+    if (value == null || value === '') pairs = [];
+    else if (typeof value === 'string') pairs = value.toUpperCase().split(/[\s,;]+/).filter(Boolean);
+    else if (Array.isArray(value)) pairs = value.map((pair) => String(pair).toUpperCase());
+    else throw new Error('Plugboard must be a string or an array of pairs');
+
+    const seen = new Set();
+    const normalized = [];
+    pairs.forEach((pair) => {
+      if (!/^[A-Z]{2}$/.test(pair)) throw new Error('Invalid plugboard pair: ' + pair);
+      const [a, b] = pair.split('');
+      if (a === b) throw new Error('A cable cannot connect a letter to itself: ' + pair);
+      if (seen.has(a) || seen.has(b)) {
+        throw new Error('A letter is used by more than one cable: ' + a + '/' + b);
+      }
+      seen.add(a);
+      seen.add(b);
+      normalized.push([a, b].sort().join(''));
+    });
+    if (normalized.length > MAX_PLUGS) {
+      throw new Error('The plugboard accepts at most ' + MAX_PLUGS + ' cables');
+    }
+    return normalized;
+  }
+
+  function buildPlugMap(pairs) {
+    const map = Array.from({ length: 26 }, (_, i) => i);
+    pairs.forEach((pair) => {
+      const a = toIndex(pair[0]);
+      const b = toIndex(pair[1]);
+      map[a] = b;
+      map[b] = a;
+    });
+    return map;
+  }
+
+  /* Accept the many shapes a key sheet can take and return a clean config. */
+  function normalizeConfig(input) {
+    const source = input || {};
+    const rotors = (source.rotors || ['I', 'II', 'III']).map((id) => String(id).toUpperCase());
+    if (rotors.length !== 3) throw new Error('Exactly three rotors are required');
+    rotors.forEach((id) => {
+      if (!ROTORS[id]) throw new Error('Unknown rotor: ' + id);
+    });
+    if (new Set(rotors).size !== 3) throw new Error('Each rotor can only be used once');
+
+    const reflector = String(source.reflector || 'B').toUpperCase();
+    if (!REFLECTORS[reflector]) throw new Error('Unknown reflector: ' + reflector);
+
+    return {
+      rotors,
+      reflector,
+      rings: normalizeTriplet(source.rings, 'AAA'),
+      positions: normalizeTriplet(source.positions, 'AAA'),
+      plugboard: normalizePlugboard(source.plugboard),
+    };
+  }
+
+  /* A rotor transforms a contact index from its right-hand face to its
+     left-hand face. `shift` is the position of the wiring relative to the
+     fixed ring: position P with ring R means the wiring is rotated by P − R. */
+  function forwardThrough(spec, contact, shift) {
+    return mod(spec.forward[mod(contact + shift, 26)] - shift, 26);
+  }
+
+  function backwardThrough(spec, contact, shift) {
+    return mod(spec.backward[mod(contact + shift, 26)] - shift, 26);
+  }
+
+  class Machine {
+    constructor(config) {
+      this.setConfig(config);
+    }
+
+    setConfig(config) {
+      this.config = normalizeConfig(config);
+      this.specs = this.config.rotors.map((id) => ROTORS[id]);
+      this.reflector = REFLECTORS[this.config.reflector];
+      this.ringOffsets = this.config.rings.map(toIndex);
+      this.contacts = this.config.positions.map(toIndex);
+      this.plugMap = buildPlugMap(this.config.plugboard);
+      this.steps = 0;
+      this.resetPositions(this.config.positions);
+      return this;
+    }
+
+    resetPositions(value) {
+      this.config.positions = normalizeTriplet(value, 'AAA');
+      this.contacts = this.config.positions.map(toIndex);
+      this.steps = 0;
+      return this;
+    }
+
+    setPositions(value) {
+      const letters = normalizeTriplet(value, 'AAA');
+      this.contacts = letters.map(toIndex);
+      this.config.positions = letters;
+      return this;
+    }
+
+    get positions() {
+      return this.contacts.map(toLetter);
+    }
+
+    get positionString() {
+      return this.positions.join('');
+    }
+
+    get ringString() {
+      return this.config.rings.join('');
+    }
+
+    isAtNotch(slot) {
+      return this.contacts[slot] === this.specs[slot].notchIndex;
+    }
+
+    get notchFlags() {
+      return [0, 1, 2].map((slot) => this.isAtNotch(slot));
+    }
+
+    /* Step the rotors BEFORE the current key is enciphered, exactly like the
+       real machine. Returns which of the three wheels moved.
+       Double stepping: if the middle wheel sits in its notch it advances and
+       pushes the left wheel along, no matter what the right wheel does. */
+    step() {
+      const moved = [false, false, false];
+      const middleNotch = this.specs[1].notchIndex;
+      const rightNotch = this.specs[2].notchIndex;
+
+      if (this.contacts[1] === middleNotch) {
+        this.contacts[1] = mod(this.contacts[1] + 1, 26);
+        moved[1] = true;
+        this.contacts[0] = mod(this.contacts[0] + 1, 26);
+        moved[0] = true;
+      } else if (this.contacts[2] === rightNotch) {
+        this.contacts[1] = mod(this.contacts[1] + 1, 26);
+        moved[1] = true;
+      }
+      this.contacts[2] = mod(this.contacts[2] + 1, 26);
+      moved[2] = true;
+
+      this.steps += 1;
+      return moved;
+    }
+
+    /* Pure electrical path for one letter (no stepping, no plugboard state
+       change). Returns the output letter and every transformation. */
+    encipherLetter(letter) {
+      const input = normalizeLetter(letter);
+      let contact = toIndex(input);
+      const trace = [{ stage: 'input', from: input, to: input }];
+
+      const afterPlugIn = this.plugMap[contact];
+      trace.push({
+        stage: 'plug',
+        pass: 'in',
+        from: toLetter(contact),
+        to: toLetter(afterPlugIn),
+      });
+      contact = afterPlugIn;
+
+      for (let slot = 2; slot >= 0; slot -= 1) {
+        const before = contact;
+        const shift = mod(this.contacts[slot] - this.ringOffsets[slot], 26);
+        contact = forwardThrough(this.specs[slot], contact, shift);
+        trace.push({
+          stage: 'rotor',
+          slot,
+          direction: 'forward',
+          rotor: this.specs[slot].id,
+          from: toLetter(before),
+          to: toLetter(contact),
+        });
+      }
+
+      const beforeReflector = contact;
+      contact = this.reflector.map[contact];
+      trace.push({
+        stage: 'reflector',
+        reflector: this.reflector.id,
+        from: toLetter(beforeReflector),
+        to: toLetter(contact),
+      });
+
+      for (let slot = 0; slot <= 2; slot += 1) {
+        const before = contact;
+        const shift = mod(this.contacts[slot] - this.ringOffsets[slot], 26);
+        contact = backwardThrough(this.specs[slot], contact, shift);
+        trace.push({
+          stage: 'rotor',
+          slot,
+          direction: 'backward',
+          rotor: this.specs[slot].id,
+          from: toLetter(before),
+          to: toLetter(contact),
+        });
+      }
+
+      const beforePlugOut = contact;
+      contact = this.plugMap[contact];
+      trace.push({
+        stage: 'plug',
+        pass: 'out',
+        from: toLetter(beforePlugOut),
+        to: toLetter(contact),
+      });
+
+      trace.push({ stage: 'lamp', from: toLetter(contact), to: toLetter(contact) });
+
+      return { input, output: toLetter(contact), trace };
+    }
+
+    /* The real interaction: step, then encipher one letter. */
+    processLetter(letter) {
+      const stepped = this.step();
+      const result = this.encipherLetter(letter);
+      return {
+        ...result,
+        stepped,
+        positions: this.positions,
+        positionString: this.positionString,
+        atNotch: this.notchFlags,
+      };
+    }
+
+    /* Encipher a whole string from the current positions. Characters other
+       than A–Z are ignored. */
+    encrypt(text) {
+      let out = '';
+      for (const char of String(text)) {
+        if (/^[A-Za-z]$/.test(char)) out += this.processLetter(char).output;
+      }
+      return out;
+    }
+
+    getConfig() {
+      return {
+        rotors: [...this.config.rotors],
+        reflector: this.config.reflector,
+        rings: [...this.config.rings],
+        positions: this.positions,
+        plugboard: [...this.config.plugboard],
+      };
+    }
+  }
+
+  /* The classic published test vector: rotors I-II-III, UKW-B, all rings and
+     positions at A, no cables, "AAAAA" must produce "BDZGO". */
+  const KNOWN_VECTOR = Object.freeze({
+    plaintext: 'AAAAA',
+    ciphertext: 'BDZGO',
+    config: Object.freeze({
+      rotors: ['I', 'II', 'III'],
+      reflector: 'B',
+      rings: 'AAA',
+      positions: 'AAA',
+      plugboard: [],
+    }),
+  });
+
+  function runSelfTest() {
+    const machine = new Machine(KNOWN_VECTOR.config);
+    const ciphertext = machine.encrypt(KNOWN_VECTOR.plaintext);
+    const reciprocal = new Machine({
+      ...KNOWN_VECTOR.config,
+      positions: 'AAA',
+    }).encrypt(ciphertext);
+    return {
+      pass: ciphertext === KNOWN_VECTOR.ciphertext && reciprocal === KNOWN_VECTOR.plaintext,
+      ciphertext,
+      expected: KNOWN_VECTOR.ciphertext,
+      reciprocal,
+    };
+  }
+
+  return Object.freeze({
+    Machine,
+    ROTORS,
+    REFLECTORS,
+    ROTOR_IDS: [...ROTOR_IDS],
+    REFLECTOR_IDS: [...REFLECTOR_IDS],
+    MAX_PLUGS,
+    KNOWN_VECTOR,
+    runSelfTest,
+    normalizeConfig,
+    normalizePlugboard,
+    normalizeLetter,
+    toIndex,
+    toLetter,
+  });
+});
+
+</script>
+  <script>
+(function () {
+  'use strict';
+
+  const E = window.Enigma;
+  if (!E) {
+    console.error('Enigma core failed to load.');
+    return;
+  }
+
+  const STORAGE_KEY = 'enigma-m3-state-v1';
+  const MAX_TAPE = 240;
+  const MAX_LOG = 60;
+  const CABLE_COLORS = [
+    '#d9a45b', '#8fbfa2', '#7fa9cf', '#cf8fa4', '#c0ad6a',
+    '#a693d1', '#6fbdb4', '#d18f63', '#a9b86f', '#8f9cdb',
+  ];
+  const SIDE_LABELS = ['左', '中', '右'];
+  const KEY_ROWS = ['QWERTZUIO', 'ASDFGHJK', 'PYXCVBNML'].map((row) => row.split(''));
+  const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  const $ = (selector, scope = document) => scope.querySelector(selector);
+  const $$ = (selector, scope = document) => Array.from(scope.querySelectorAll(selector));
+
+  const els = {
+    rotorDeck: $('#rotorDeck'),
+    lampboard: $('#lampboard'),
+    keyboard: $('#keyboard'),
+    tape: $('#tape'),
+    rotorControls: $('#rotorControls'),
+    reflectorControl: $('#reflectorControl'),
+    reflectorNote: $('[data-reflector-note]'),
+    keySheet: $('#keySheet'),
+    keySheetText: $('#keySheetText'),
+    keyBadge: $('[data-key-badge]'),
+    messageInput: $('#messageInput'),
+    charCount: $('[data-char-count]'),
+    output: $('#output'),
+    outputMeta: $('[data-output-meta]'),
+    trace: $('#trace'),
+    tracePos: $('[data-trace-pos]'),
+    logBody: $('#logBody'),
+    logCount: $('[data-log-count]'),
+    plugRows: $('#plugRows'),
+    plugboard: $('#plugboard'),
+    cables: $('#cables'),
+    plugPairs: $('#plugPairs'),
+    plugCount: $('[data-plug-count]'),
+    headerUkw: $('[data-header-ukw]'),
+    status: $('[data-status]'),
+    soundBtn: $('[data-action="sound"]'),
+    soundLabel: $('[data-sound-label]'),
+    runBtn: $('[data-action="run"]'),
+    runLabel: $('[data-run-label]'),
+    toasts: $('#toasts'),
+    srStatus: $('#srStatus'),
+    helpDialog: $('#helpDialog'),
+    selfTestResult: $('#selfTestResult'),
+    groupToggle: $('[data-action="grouping"]'),
+    machine: $('.machine'),
+  };
+
+  const state = {
+    rotors: ['I', 'II', 'III'],
+    reflector: 'B',
+    rings: ['A', 'A', 'A'],
+    start: ['A', 'A', 'A'],
+    plugboard: [],
+    sound: true,
+    grouping: true,
+    tape: '',
+    output: '',
+    log: [],
+    logTotal: 0,
+    running: false,
+    lastResult: null,
+  };
+
+  let machine = null;
+  let selectedPlug = null;
+  let newCablePairs = new Set();
+  let audioContext = null;
+  let noiseBuffer = null;
+  let resizeTimer = 0;
+
+  /* -----------------------------------------------------------------------
+     Build the static machine furniture
+     ----------------------------------------------------------------------- */
+
+  function buildRotorDeck() {
+    const rotors = SIDE_LABELS.map((label, slot) => `
+      <div class="rotor" data-slot="${slot}" role="group" aria-label="${label}转子">
+        <div class="rotor-cap">
+          <span>${label} · ${slot === 0 ? 'LEFT' : slot === 1 ? 'MIDDLE' : 'RIGHT'}</span>
+          <span class="rotor-id" data-rotor-id>—</span>
+        </div>
+        <div class="rotor-window" aria-hidden="true">
+          <span class="ghost ghost--prev" data-prev>Z</span>
+          <span class="rotor-letter" data-letter>A</span>
+          <span class="ghost ghost--next" data-next>B</span>
+          <span class="rotor-notch" data-notch title="缺口"></span>
+        </div>
+        <div class="rotor-meta">
+          <span>RING <b data-ring>01</b></span>
+          <span>POS <b data-pos>A</b></span>
+        </div>
+      </div>
+    `).join('');
+
+    els.rotorDeck.innerHTML = rotors + `
+      <button type="button" class="reflector-card" data-action="toggle-reflector"
+        title="点击切换 UKW-B / UKW-C" aria-label="反射器 UKW-B，点击切换">
+        <span class="ref-cap">UKW</span>
+        <span class="ref-letter" data-reflector-letter>B</span>
+        <span class="ref-name">反射器</span>
+      </button>
+    `;
+  }
+
+  function buildLampsAndKeys() {
+    els.lampboard.innerHTML = KEY_ROWS.map((row) => `
+      <div class="lamp-row">
+        ${row.map((letter) => `<span class="lamp" data-lamp="${letter}" aria-hidden="true">${letter}</span>`).join('')}
+      </div>
+    `).join('');
+
+    els.keyboard.innerHTML = KEY_ROWS.map((row) => `
+      <div class="key-row">
+        ${row.map((letter) => `
+          <button type="button" class="key" data-key="${letter}" aria-label="按键 ${letter}">${letter}</button>
+        `).join('')}
+      </div>
+    `).join('');
+  }
+
+  function buildRotorControls() {
+    els.rotorControls.innerHTML = SIDE_LABELS.map((label, slot) => `
+      <div class="rc" data-slot="${slot}">
+        <div class="rc-top">
+          <span class="rc-side">${label}</span>
+          <span class="rc-roman" data-live-rotor>I</span>
+        </div>
+        <label class="rc-field">
+          <span>转子 <i>Walze</i></span>
+          <select data-rotor-select aria-label="${label}转子型号">
+            ${E.ROTOR_IDS.map((id) => `<option value="${id}">${id} · ${E.ROTORS[id].notch}</option>`).join('')}
+          </select>
+        </label>
+        <div class="rc-field">
+          <span>环设置 <i>Ring</i></span>
+          <div class="stepper">
+            <button type="button" data-ring-step="-1" aria-label="${label}转子环设置减一">−</button>
+            <b data-ring-value>01</b>
+            <button type="button" data-ring-step="1" aria-label="${label}转子环设置加一">+</button>
+          </div>
+        </div>
+        <div class="rc-field">
+          <span>起始位置 <i>Grund</i></span>
+          <div class="stepper">
+            <button type="button" data-start-step="-1" aria-label="${label}转子起始位置减一">−</button>
+            <b data-start-value>A</b>
+            <button type="button" data-start-step="1" aria-label="${label}转子起始位置加一">+</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function buildPlugboard() {
+    els.plugRows.innerHTML = LETTERS.map((letter) => `
+      <button type="button" class="plug" data-plug="${letter}" aria-label="插孔 ${letter}" aria-pressed="false">
+        <span class="plug-letter">${letter}</span>
+        <span class="plug-mate" aria-hidden="true"></span>
+      </button>
+    `).join('');
+  }
+
+  /* -----------------------------------------------------------------------
+     Machine construction and configuration
+     ----------------------------------------------------------------------- */
+
+  function createMachine(config, positions) {
+    return new E.Machine({
+      rotors: config.rotors,
+      reflector: config.reflector,
+      rings: config.rings,
+      positions: positions || config.start || config.positions || 'AAA',
+      plugboard: config.plugboard,
+    });
+  }
+
+  function rebuildMachine(reset) {
+    const live = reset || !machine ? state.start : machine.positions;
+    machine = createMachine(state, live);
+    state.plugboard = machine.getConfig().plugboard;
+  }
+
+  function installConfig(config, options) {
+    const opts = options || {};
+    const next = E.normalizeConfig(config);
+    state.rotors = [...next.rotors];
+    state.reflector = next.reflector;
+    state.rings = [...next.rings];
+    state.start = [...next.positions];
+    state.plugboard = [...next.plugboard];
+    selectedPlug = null;
+    rebuildMachine(opts.reset !== false);
+    if (opts.clear) resetSession({ render: false });
+    renderAll();
+    saveState();
+  }
+
+  function applyKeyChange(options) {
+    rebuildMachine(Boolean(options && options.reset));
+    if (options && options.clearTrace !== false) clearTrace();
+    clearLamp();
+    renderRotors();
+    renderSettings();
+    saveState();
+  }
+
+  function applyPlugboardChange(animatePair) {
+    if (animatePair) newCablePairs.add(animatePair);
+    rebuildMachine(false);
+    clearLamp();
+    renderPlugboard();
+    clearTrace();
+    saveState();
+  }
+
+  function setRotorType(slot, id) {
+    if (guardBusy()) {
+      renderSettings();
+      return;
+    }
+    const next = [...state.rotors];
+    next[slot] = id;
+    if (new Set(next).size !== 3) {
+      toast('同一型号的转子不能重复使用', 'error');
+      renderSettings();
+      return;
+    }
+    state.rotors = next;
+    applyKeyChange();
+    playClick({ frequency: 1200, gain: 0.022 });
+  }
+
+  function stepRing(slot, direction) {
+    if (guardBusy()) return;
+    const index = E.toIndex(state.rings[slot]);
+    state.rings[slot] = E.toLetter(index + direction);
+    applyKeyChange();
+    playClick({ frequency: 1750, gain: 0.018 });
+  }
+
+  function stepStart(slot, direction) {
+    if (guardBusy()) return;
+    const index = E.toIndex(state.start[slot]);
+    state.start[slot] = E.toLetter(index + direction);
+    applyKeyChange({ reset: true });
+    playClick({ frequency: 900, gain: 0.024 });
+  }
+
+  function setReflector(id) {
+    if (guardBusy()) return;
+    if (state.reflector === id) return;
+    state.reflector = id;
+    applyKeyChange();
+    playClick({ frequency: 700, gain: 0.03 });
+  }
+
+  function toggleReflector() {
+    setReflector(state.reflector === 'B' ? 'C' : 'B');
+  }
+
+  function resetPositions() {
+    if (guardBusy()) return;
+    machine.setPositions(state.start);
+    clearLamp();
+    renderRotors();
+    clearTrace('转子已复位到起始位置 · 按下一个键查看新的信号路径');
+    playClick({ frequency: 620, gain: 0.03 });
+    toast(`转子已复位至 ${state.start.join('')}`);
+  }
+
+  function randomKey() {
+    if (guardBusy()) return;
+    const rotors = shuffle([...E.ROTOR_IDS]).slice(0, 3);
+    const config = {
+      rotors,
+      reflector: Math.random() < 0.5 ? 'B' : 'C',
+      rings: randomLetters(3),
+      positions: randomLetters(3),
+      plugboard: randomPlugs(10),
+    };
+    newCablePairs = new Set(config.plugboard);
+    installConfig(config, { reset: true, clear: true });
+    els.keySheet.open = true;
+    playPlugSound();
+    toast('已生成新密钥，密钥单已展开');
+  }
+
+  function randomizePlugs() {
+    if (guardBusy()) return;
+    const pairs = randomPlugs(10);
+    newCablePairs = new Set(pairs);
+    state.plugboard = pairs;
+    applyPlugboardChange();
+    playPlugSound();
+    toast('已随机插满 10 对连线');
+  }
+
+  function clearPlugs() {
+    if (guardBusy()) return;
+    if (!state.plugboard.length) {
+      toast('插线板已经是空的');
+      return;
+    }
+    state.plugboard = [];
+    selectedPlug = null;
+    applyPlugboardChange();
+    playPlugSound(300);
+    toast('已拔除全部连线');
+  }
+
+  /* -----------------------------------------------------------------------
+     Plugboard interaction
+     ----------------------------------------------------------------------- */
+
+  function pairContaining(letter) {
+    return state.plugboard.find((pair) => pair.includes(letter)) || null;
+  }
+
+  function handlePlugClick(letter) {
+    if (guardBusy()) return;
+
+    const existing = pairContaining(letter);
+    if (existing) {
+      state.plugboard = state.plugboard.filter((pair) => pair !== existing);
+      selectedPlug = null;
+      applyPlugboardChange();
+      playPlugSound(280);
+      return;
+    }
+
+    if (selectedPlug === letter) {
+      selectedPlug = null;
+      renderPlugboard();
+      return;
+    }
+
+    if (!selectedPlug) {
+      selectedPlug = letter;
+      renderPlugboard();
+      playClick({ frequency: 2200, gain: 0.018 });
+      return;
+    }
+
+    if (state.plugboard.length >= E.MAX_PLUGS) {
+      toast('最多只能连接 10 对线', 'error');
+      selectedPlug = null;
+      renderPlugboard();
+      playError();
+      return;
+    }
+
+    const pair = [selectedPlug, letter].sort().join('');
+    state.plugboard = E.normalizePlugboard([...state.plugboard, pair]);
+    selectedPlug = null;
+    applyPlugboardChange(pair);
+    playPlugSound();
+  }
+
+  function removePlugPair(pair) {
+    if (guardBusy()) return;
+    state.plugboard = state.plugboard.filter((item) => item !== pair);
+    selectedPlug = null;
+    applyPlugboardChange();
+    playPlugSound(280);
+  }
+
+  function renderPlugboard() {
+    const pairColor = new Map();
+    state.plugboard.forEach((pair, index) => {
+      pairColor.set(pair, CABLE_COLORS[index % CABLE_COLORS.length]);
+    });
+
+    $$('.plug', els.plugRows).forEach((button) => {
+      const letter = button.dataset.plug;
+      const pair = pairContaining(letter);
+      const mate = pair ? pair.replace(letter, '') : '';
+      const color = pair ? pairColor.get(pair) : null;
+      const selected = selectedPlug === letter;
+
+      button.classList.toggle('is-connected', Boolean(pair));
+      button.classList.toggle('is-selected', selected);
+      button.setAttribute('aria-pressed', selected ? 'true' : 'false');
+      button.setAttribute('aria-label', pair
+        ? `插孔 ${letter}，已连接 ${mate}，点击拔除`
+        : `插孔 ${letter}${selected ? '，已选中，请选择另一个字母' : ''}`);
+      if (color) button.style.setProperty('--plug-color', color);
+      else button.style.removeProperty('--plug-color');
+
+      const mateEl = $('.plug-mate', button);
+      if (mateEl) mateEl.textContent = mate;
+    });
+
+    els.plugCount.textContent = `${state.plugboard.length} / ${E.MAX_PLUGS} 对`;
+    els.plugCount.classList.toggle('chip--count', state.plugboard.length < E.MAX_PLUGS);
+    els.plugboard.classList.toggle('is-empty', state.plugboard.length === 0);
+
+    if (!state.plugboard.length) {
+      els.plugPairs.innerHTML = '<span class="plug-empty">尚未插线 — 点击两个字母建立连线</span>';
+    } else {
+      els.plugPairs.innerHTML = state.plugboard.map((pair) => {
+        const color = pairColor.get(pair);
+        return `
+          <button type="button" class="plug-chip" data-unplug="${pair}"
+            style="--chip-color:${color}" aria-label="拔除插线 ${pair}" title="拔除 ${pair}">
+            <span class="chip-dot" aria-hidden="true"></span>${pair}<span class="chip-x" aria-hidden="true">×</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    drawCables();
+  }
+
+  function drawCables() {
+    if (!els.cables) return;
+    const svgRect = els.cables.getBoundingClientRect();
+    if (!svgRect.width || !svgRect.height) return;
+
+    els.cables.setAttribute('viewBox', `0 0 ${svgRect.width.toFixed(1)} ${svgRect.height.toFixed(1)}`);
+
+    const centers = new Map();
+    $$('.plug', els.plugRows).forEach((button) => {
+      const rect = button.getBoundingClientRect();
+      centers.set(button.dataset.plug, {
+        x: rect.left - svgRect.left + rect.width / 2,
+        y: rect.top - svgRect.top + rect.height / 2,
+      });
+    });
+
+    const all = Array.from(centers.values());
+    if (!all.length) return;
+    const channelY = (Math.min(...all.map((point) => point.y)) + Math.max(...all.map((point) => point.y))) / 2;
+
+    const paths = [];
+    state.plugboard.forEach((pair, index) => {
+      const a = centers.get(pair[0]);
+      const b = centers.get(pair[1]);
+      if (!a || !b) return;
+      const color = CABLE_COLORS[index % CABLE_COLORS.length];
+      const dx = b.x - a.x;
+      const c1x = a.x + dx * 0.16;
+      const c2x = b.x - dx * 0.16;
+      const d = [
+        'M', a.x.toFixed(1), a.y.toFixed(1),
+        'C', c1x.toFixed(1), channelY.toFixed(1),
+        c2x.toFixed(1), channelY.toFixed(1),
+        b.x.toFixed(1), b.y.toFixed(1),
+      ].join(' ');
+      paths.push(`<path class="cable-halo" d="${d}" stroke="${color}"></path>`);
+      paths.push(`<path class="cable" d="${d}" stroke="${color}" data-pair="${pair}"></path>`);
+    });
+
+    els.cables.innerHTML = paths.join('');
+
+    if (newCablePairs.size) {
+      $$('.cable', els.cables).forEach((path) => {
+        if (!newCablePairs.has(path.dataset.pair)) return;
+        if (typeof path.getTotalLength !== 'function' || typeof path.animate !== 'function') return;
+        const length = path.getTotalLength();
+        path.style.strokeDasharray = String(length);
+        path.animate(
+          [{ strokeDashoffset: length }, { strokeDashoffset: 0 }],
+          { duration: 480, easing: 'ease-out' }
+        );
+      });
+      newCablePairs.clear();
+    }
+  }
+
+  /* -----------------------------------------------------------------------
+     Rendering
+     ----------------------------------------------------------------------- */
+
+  function renderAll() {
+    renderRotors();
+    renderSettings();
+    renderPlugboard();
+    renderTape();
+    renderOutput();
+    renderLog();
+    updateCharCount();
+    updateSoundButton();
+    updateStatus();
+  }
+
+  function renderRotors() {
+    const positions = machine.positions;
+
+    $$('.rotor', els.rotorDeck).forEach((card) => {
+      const slot = Number(card.dataset.slot);
+      const position = positions[slot];
+      const ringNumber = String(E.toIndex(state.rings[slot]) + 1).padStart(2, '0');
+      card.classList.toggle('is-notch', machine.isAtNotch(slot));
+      card.setAttribute('aria-label', `${SIDE_LABELS[slot]}转子 ${state.rotors[slot]}，当前位置 ${position}，环设置 ${ringNumber}`);
+
+      $('[data-rotor-id]', card).textContent = state.rotors[slot];
+      $('[data-letter]', card).textContent = position;
+      $('[data-prev]', card).textContent = E.toLetter(E.toIndex(position) - 1);
+      $('[data-next]', card).textContent = E.toLetter(E.toIndex(position) + 1);
+      $('[data-ring]', card).textContent = ringNumber;
+      $('[data-pos]', card).textContent = position;
+      const notch = $('[data-notch]', card);
+      notch.title = `缺口 ${E.ROTORS[state.rotors[slot]].notch} · 当前 ${position}`;
+    });
+
+    const reflectorLetter = $('[data-reflector-letter]', els.rotorDeck);
+    if (reflectorLetter) reflectorLetter.textContent = state.reflector;
+    const reflectorCard = $('.reflector-card', els.rotorDeck);
+    if (reflectorCard) {
+      reflectorCard.setAttribute('aria-label', `反射器 UKW-${state.reflector}，点击切换`);
+    }
+    els.headerUkw.textContent = state.reflector;
+  }
+
+  function renderSettings() {
+    $$('.rc', els.rotorControls).forEach((card) => {
+      const slot = Number(card.dataset.slot);
+      $('[data-live-rotor]', card).textContent = state.rotors[slot];
+      $('[data-rotor-select]', card).value = state.rotors[slot];
+      $('[data-ring-value]', card).textContent = String(E.toIndex(state.rings[slot]) + 1).padStart(2, '0');
+      $('[data-start-value]', card).textContent = state.start[slot];
+    });
+
+    $$('button[data-reflector]', els.reflectorControl).forEach((button) => {
+      const active = button.dataset.reflector === state.reflector;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+
+    els.reflectorNote.textContent = state.reflector === 'B' ? '标准接线' : '替代接线';
+    els.keyBadge.textContent = state.rotors.join(' · ');
+    els.keySheetText.textContent = formatKeySheet();
+    els.groupToggle.checked = state.grouping;
+  }
+
+  function formatKeySheet() {
+    const ringNumbers = state.rings.map((letter) => String(E.toIndex(letter) + 1).padStart(2, '0')).join(' ');
+    return [
+      `Walzenlage:    ${state.rotors.join(' · ')}`,
+      `Ringstellung:  ${ringNumbers}`,
+      `Grundstellung: ${state.start.join(' ')}`,
+      `Steckerbrett:  ${state.plugboard.length ? state.plugboard.join(' ') : '—'}`,
+      `UKW:           ${state.reflector}`,
+    ].join('\n');
+  }
+
+  function renderTape() {
+    if (!state.tape) {
+      els.tape.innerHTML = '<span class="tape-empty">按下按键开始加密…</span>';
+      return;
+    }
+    const chars = Array.from(state.tape);
+    const lastIndex = chars.length - 1;
+    els.tape.innerHTML = chars
+      .map((char, index) => `<span class="tape-char${index === lastIndex ? ' is-last' : ''}">${char}</span>`)
+      .join('');
+    els.tape.scrollLeft = els.tape.scrollWidth;
+  }
+
+  function groupLetters(text) {
+    const groups = text.match(/.{1,5}/g);
+    return groups ? groups.join(' ') : '';
+  }
+
+  function renderOutput() {
+    if (!state.output) {
+      els.output.textContent = '—';
+      els.output.classList.add('is-empty');
+      return;
+    }
+    els.output.classList.remove('is-empty');
+    els.output.textContent = state.grouping ? groupLetters(state.output) : state.output;
+    els.output.scrollTop = els.output.scrollHeight;
+  }
+
+  function renderTrace(result, quick) {
+    els.trace.classList.toggle('is-quick', Boolean(quick));
+    const rows = result.trace.map((entry, index) => {
+      let stage = '';
+      let direction = '';
+
+      if (entry.stage === 'input') stage = '按键';
+      else if (entry.stage === 'plug') stage = entry.pass === 'in' ? '插线板' : '插线板 · 回';
+      else if (entry.stage === 'rotor') {
+        direction = entry.direction;
+        stage = `${SIDE_LABELS[entry.slot]} ${entry.rotor}${entry.direction === 'backward' ? ' · 回' : ''}`;
+      } else if (entry.stage === 'reflector') stage = `反射器 ${entry.reflector}`;
+      else if (entry.stage === 'lamp') stage = '灯板';
+
+      return `
+        <div class="trace-row" style="--i:${quick ? 0 : index}" data-kind="${entry.stage}" data-direction="${direction}">
+          <span class="trace-stage">${stage}</span>
+          <span class="trace-path">
+            <b class="from">${entry.from}</b>
+            <span class="arrow" aria-hidden="true">→</span>
+            <b class="to">${entry.to}</b>
+          </span>
+        </div>
+      `;
+    });
+
+    els.trace.innerHTML = rows.join('');
+    els.tracePos.textContent = `${result.input} → ${result.output} · ${result.positionString}`;
+  }
+
+  function clearTrace(message) {
+    els.trace.classList.remove('is-quick');
+    els.trace.innerHTML = `<p class="trace-empty">${message || '按下一个键，查看电流如何穿过插线板、三只转子和反射器。金色表示去程，青色表示回程。'}</p>`;
+    els.tracePos.textContent = '—';
+  }
+
+  function pushLog(result) {
+    state.logTotal += 1;
+    state.log.unshift({
+      seq: state.logTotal,
+      input: result.input,
+      output: result.output,
+      positionString: result.positionString,
+    });
+    if (state.log.length > MAX_LOG) state.log.pop();
+  }
+
+  function renderLog() {
+    if (!state.log.length) {
+      els.logBody.innerHTML = '<tr><td colspan="4" class="log-empty">尚无记录</td></tr>';
+      els.logCount.textContent = '0 条';
+      return;
+    }
+    els.logBody.innerHTML = state.log.map((item) => `
+      <tr>
+        <td>${item.seq}</td>
+        <td>${item.input}</td>
+        <td class="out">${item.output}</td>
+        <td class="pos">${item.positionString}</td>
+      </tr>
+    `).join('');
+    els.logCount.textContent = `${state.log.length} 条`;
+  }
+
+  function updateCharCount() {
+    const raw = els.messageInput.value;
+    const letters = raw.replace(/[^A-Za-z]/g, '').length;
+    const ignored = raw.length - letters - (raw.match(/\s/g) || []).length;
+    els.charCount.textContent = `${letters} 个字母${ignored > 0 ? ` · 忽略 ${ignored} 个符号` : ''}`;
+  }
+
+  function setLamp(letter, pulse) {
+    $$('.lamp', els.lampboard).forEach((lamp) => {
+      const lit = lamp.dataset.lamp === letter;
+      lamp.classList.toggle('is-lit', lit);
+      if (lit && pulse && typeof lamp.animate === 'function') {
+        lamp.animate(
+          [{ transform: 'scale(1.14)' }, { transform: 'scale(1)' }],
+          { duration: 280, easing: 'ease-out' }
+        );
+      }
+    });
+  }
+
+  function clearLamp() {
+    $$('.lamp', els.lampboard).forEach((lamp) => lamp.classList.remove('is-lit'));
+  }
+
+  function animateRotors(stepped) {
+    stepped.forEach((moved, slot) => {
+      if (!moved) return;
+      const letter = $(`.rotor[data-slot="${slot}"] [data-letter]`, els.rotorDeck);
+      if (!letter || typeof letter.animate !== 'function' || REDUCED_MOTION.matches) return;
+      letter.animate(
+        [
+          { transform: 'translateY(42%)', opacity: 0.15, filter: 'blur(1px)' },
+          { transform: 'translateY(0)', opacity: 1, filter: 'blur(0)' },
+        ],
+        { duration: 230, easing: 'cubic-bezier(.2,.8,.2,1)' }
+      );
+    });
+  }
+
+  function animateKey(letter) {
+    const key = $(`.key[data-key="${letter}"]`, els.keyboard);
+    if (!key) return;
+    key.classList.add('is-down');
+    window.setTimeout(() => key.classList.remove('is-down'), 110);
+  }
+
+  function updateStatus() {
+    els.status.textContent = state.running ? '运行中 · LAEUFT' : '待命 · BEREIT';
+  }
+
+  function setRunning(running) {
+    state.running = running;
+    document.body.classList.toggle('is-running', running);
+    els.runBtn.disabled = running;
+    els.runLabel.textContent = running ? '正在运行…' : '运行加密 / 解密';
+    els.output.classList.toggle('is-running', running);
+    updateStatus();
+  }
+
+  /* -----------------------------------------------------------------------
+     Typing one letter
+     ----------------------------------------------------------------------- */
+
+  function pressLetter(letter) {
+    if (state.running) return;
+    if (!/^[A-Z]$/.test(letter)) return;
+
+    animateKey(letter);
+    const result = machine.processLetter(letter);
+    state.lastResult = result;
+    state.tape = (state.tape + result.output).slice(-MAX_TAPE);
+    pushLog(result);
+
+    renderRotors();
+    animateRotors(result.stepped);
+    setLamp(result.output, true);
+    renderTrace(result);
+    renderTape();
+    renderLog();
+
+    playKeySound();
+    window.setTimeout(() => playLampSound(), 18);
+    announce(`按键 ${letter}，加密为 ${result.output}，转子位置 ${result.positionString}`);
+  }
+
+  /* -----------------------------------------------------------------------
+     Message processing
+     ----------------------------------------------------------------------- */
+
+  async function runMessage() {
+    if (state.running) return;
+
+    updateCharCount();
+    const raw = els.messageInput.value;
+    const letters = raw.toUpperCase().replace(/[^A-Z]/g, '');
+    if (!letters) {
+      toast('请先输入 A–Z 字母', 'error');
+      els.messageInput.focus();
+      return;
+    }
+
+    const total = letters.length;
+    const startPositions = state.start.join('');
+    const animate = total <= 180 && !REDUCED_MOTION.matches;
+    const withSound = total <= 48;
+    let lastResult = null;
+
+    machine.setPositions(state.start);
+    resetSession();
+    setRunning(true);
+
+    try {
+      if (animate) {
+        for (let index = 0; index < total; index += 1) {
+          const result = machine.processLetter(letters[index]);
+          lastResult = result;
+          state.output += result.output;
+          state.tape = (state.tape + result.output).slice(-MAX_TAPE);
+          pushLog(result);
+
+          renderRotors();
+          animateRotors(result.stepped);
+          setLamp(result.output, false);
+          renderTrace(result, true);
+          renderTape();
+          renderOutput();
+          if (index % 4 === 0 || index === total - 1) renderLog();
+
+          if (withSound) playKeySound(0.012);
+          els.outputMeta.textContent = `运行中 ${index + 1} / ${total}`;
+          await sleep(25);
+        }
+        if (lastResult) renderTrace(lastResult);
+      } else {
+        let output = '';
+        for (let index = 0; index < total; index += 1) {
+          const result = machine.processLetter(letters[index]);
+          output += result.output;
+          lastResult = result;
+          pushLog(result);
+        }
+        state.output = output;
+        state.tape = output.slice(-MAX_TAPE);
+        if (lastResult) {
+          renderRotors();
+          animateRotors(lastResult.stepped);
+          setLamp(lastResult.output, false);
+          renderTrace(lastResult);
+        }
+        renderTape();
+        renderOutput();
+        renderLog();
+      }
+
+      const endPositions = machine.positionString;
+      els.outputMeta.textContent = `${total} 字母 · ${startPositions} → ${endPositions}`;
+      announce(`处理完成，共 ${total} 个字母，结束位置 ${endPositions}`);
+      playDoneSound();
+    } catch (error) {
+      console.error(error);
+      toast('运行时出现错误：' + error.message, 'error');
+    } finally {
+      setRunning(false);
+      saveState();
+    }
+  }
+
+  function resetSession(options) {
+    const opts = options || {};
+    state.output = '';
+    state.tape = '';
+    state.log = [];
+    state.logTotal = 0;
+    state.lastResult = null;
+    clearLamp();
+    clearTrace();
+    els.outputMeta.textContent = '等待输入';
+    if (opts.render !== false) {
+      renderOutput();
+      renderTape();
+      renderLog();
+    }
+  }
+
+  function clearMessage() {
+    if (guardBusy()) return;
+    els.messageInput.value = '';
+    resetSession();
+    machine.setPositions(state.start);
+    renderRotors();
+    updateCharCount();
+    els.messageInput.focus();
+    toast('报文已清空，转子回到起始位置');
+  }
+
+  function useOutputAsInput() {
+    if (guardBusy()) return;
+    const source = state.output || state.tape;
+    if (!source) {
+      toast('还没有可用的输出', 'error');
+      return;
+    }
+    els.messageInput.value = source;
+    state.output = '';
+    state.tape = '';
+    state.log = [];
+    state.logTotal = 0;
+    state.lastResult = null;
+    machine.setPositions(state.start);
+    clearLamp();
+    renderRotors();
+    renderOutput();
+    renderTape();
+    renderLog();
+    clearTrace('已把密文填入输入框 · 转子复位到起始位置 · 运行即可还原明文');
+    updateCharCount();
+    els.outputMeta.textContent = '已载入密文 · 等待运行';
+    els.messageInput.focus();
+    toast('已将密文转为输入，转子已复位');
+  }
+
+  /* -----------------------------------------------------------------------
+     Helpers
+     ----------------------------------------------------------------------- */
+
+  function guardBusy() {
+    if (!state.running) return false;
+    toast('正在处理报文，请稍候', 'error');
+    return true;
+  }
+
+  function sleep(ms) {
+    return new Promise((resolve) => window.setTimeout(resolve, ms));
+  }
+
+  function shuffle(items) {
+    const array = [...items];
+    for (let index = array.length - 1; index > 0; index -= 1) {
+      const swap = Math.floor(Math.random() * (index + 1));
+      [array[index], array[swap]] = [array[swap], array[index]];
+    }
+    return array;
+  }
+
+  function randomLetters(count) {
+    return Array.from({ length: count }, () => LETTERS[Math.floor(Math.random() * 26)]);
+  }
+
+  function randomPlugs(count) {
+    const pool = shuffle([...LETTERS]);
+    const pairs = [];
+    for (let index = 0; index < count * 2; index += 2) {
+      pairs.push([pool[index], pool[index + 1]].sort().join(''));
+    }
+    return pairs;
+  }
+
+  function announce(message) {
+    els.srStatus.textContent = '';
+    window.setTimeout(() => {
+      els.srStatus.textContent = message;
+    }, 30);
+  }
+
+  function toast(message, type) {
+    const node = document.createElement('div');
+    node.className = 'toast' + (type === 'error' ? ' is-error' : '');
+    node.textContent = message;
+    els.toasts.appendChild(node);
+    while (els.toasts.children.length > 3) els.toasts.firstElementChild.remove();
+    window.setTimeout(() => {
+      node.classList.add('is-leaving');
+      window.setTimeout(() => node.remove(), 220);
+    }, 3000);
+  }
+
+  /* -----------------------------------------------------------------------
+     Sound (tiny WebAudio synth, no external assets)
+     ----------------------------------------------------------------------- */
+
+  function ensureAudio() {
+    if (!state.sound) return null;
+    if (!audioContext) {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return null;
+      try {
+        audioContext = new Ctx();
+      } catch (error) {
+        return null;
+      }
+    }
+    if (audioContext.state === 'suspended') audioContext.resume();
+    return audioContext;
+  }
+
+  function getNoiseBuffer(ctx) {
+    if (noiseBuffer) return noiseBuffer;
+    const length = Math.floor(ctx.sampleRate * 0.18);
+    noiseBuffer = ctx.createBuffer(1, length, ctx.sampleRate);
+    const data = noiseBuffer.getChannelData(0);
+    for (let index = 0; index < length; index += 1) {
+      data[index] = (Math.random() * 2 - 1) * Math.pow(1 - index / length, 3);
+    }
+    return noiseBuffer;
+  }
+
+  function playClick(options) {
+    const opts = options || {};
+    const ctx = ensureAudio();
+    if (!ctx) return;
+    const frequency = opts.frequency || 1600;
+    const gainValue = opts.gain || 0.03;
+    const duration = 0.035;
+    const source = ctx.createBufferSource();
+    source.buffer = getNoiseBuffer(ctx);
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = frequency;
+    filter.Q.value = 1.1;
+    const gain = ctx.createGain();
+    const now = ctx.currentTime;
+    gain.gain.setValueAtTime(gainValue, now);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+    source.start(now);
+    source.stop(now + duration);
+  }
+
+  function playTone(frequency, duration, gainValue, type) {
+    const ctx = ensureAudio();
+    if (!ctx) return;
+    const oscillator = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const now = ctx.currentTime;
+    oscillator.type = type || 'sine';
+    oscillator.frequency.setValueAtTime(frequency, now);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(gainValue || 0.02, now + 0.008);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+    oscillator.connect(gain);
+    gain.connect(ctx.destination);
+    oscillator.start(now);
+    oscillator.stop(now + duration + 0.02);
+  }
+
+  function playKeySound(batchGain) {
+    playClick({ frequency: 1350, gain: batchGain || 0.026 });
+    playTone(150, 0.055, (batchGain || 0.026) * 0.45, 'triangle');
+  }
+
+  function playLampSound() {
+    playTone(880, 0.09, 0.009, 'sine');
+    playTone(1320, 0.07, 0.004, 'sine');
+  }
+
+  function playPlugSound(frequency) {
+    playClick({ frequency: frequency || 2100, gain: 0.035 });
+  }
+
+  function playDoneSound() {
+    playTone(523.25, 0.12, 0.014, 'sine');
+    window.setTimeout(() => playTone(783.99, 0.18, 0.012, 'sine'), 90);
+  }
+
+  function playError() {
+    playTone(140, 0.16, 0.018, 'sawtooth');
+  }
+
+  /* -----------------------------------------------------------------------
+     Clipboard
+     ----------------------------------------------------------------------- */
+
+  async function copyText(text, successMessage) {
+    if (!text) {
+      toast('没有可复制的内容', 'error');
+      return false;
+    }
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        fallbackCopy(text);
+      }
+      toast(successMessage || '已复制到剪贴板');
+      return true;
+    } catch (error) {
+      try {
+        fallbackCopy(text);
+        toast(successMessage || '已复制到剪贴板');
+        return true;
+      } catch (fallbackError) {
+        toast('复制失败，请手动选择文本', 'error');
+        return false;
+      }
+    }
+  }
+
+  function fallbackCopy(text) {
+    const area = document.createElement('textarea');
+    area.value = text;
+    area.setAttribute('readonly', '');
+    area.style.position = 'fixed';
+    area.style.top = '-1000px';
+    area.style.opacity = '0';
+    document.body.appendChild(area);
+    area.select();
+    const ok = document.execCommand('copy');
+    area.remove();
+    if (!ok) throw new Error('copy command failed');
+  }
+
+  async function pasteFromClipboard() {
+    if (!navigator.clipboard || !navigator.clipboard.readText) {
+      toast('当前浏览器不支持读取剪贴板，请使用 Ctrl+V', 'error');
+      return;
+    }
+    try {
+      const text = await navigator.clipboard.readText();
+      if (!text) {
+        toast('剪贴板是空的');
+        return;
+      }
+      els.messageInput.value = text;
+      updateCharCount();
+      els.messageInput.focus();
+      toast('已从剪贴板粘贴');
+    } catch (error) {
+      toast('无法读取剪贴板，请使用 Ctrl+V', 'error');
+    }
+  }
+
+  function copyOutput() {
+    if (!state.output) {
+      toast('还没有输出', 'error');
+      return;
+    }
+    const text = state.grouping ? groupLetters(state.output) : state.output;
+    copyText(text, '输出已复制');
+  }
+
+  function copyTape() {
+    if (!state.tape) {
+      toast('纸带还是空的', 'error');
+      return;
+    }
+    copyText(state.tape, '纸带内容已复制');
+  }
+
+  function copyKeySheet() {
+    copyText(formatKeySheet(), '密钥单已复制');
+  }
+
+  function buildShareUrl() {
+    const params = new URLSearchParams();
+    params.set('r', state.rotors.map((id) => E.ROTOR_IDS.indexOf(id) + 1).join(''));
+    params.set('u', state.reflector);
+    params.set('g', state.rings.join(''));
+    params.set('p', state.start.join(''));
+    if (state.plugboard.length) params.set('s', state.plugboard.join(' '));
+    const url = new URL(window.location.href);
+    url.hash = params.toString();
+    return url.toString();
+  }
+
+  function shareKey() {
+    const url = buildShareUrl();
+    copyText(url, '分享链接已复制').then((copied) => {
+      if (!copied) window.prompt('复制此链接以分享密钥：', url);
+    });
+  }
+
+  function readSharedConfig() {
+    if (!window.location.hash || window.location.hash.length < 4) return null;
+    try {
+      const params = new URLSearchParams(window.location.hash.slice(1));
+      if (!params.has('r')) return null;
+      const rotorPart = params.get('r');
+      if (!/^[1-5]{3}$/.test(rotorPart)) return null;
+      const rotors = Array.from(rotorPart, (digit) => E.ROTOR_IDS[Number(digit) - 1]);
+      return E.normalizeConfig({
+        rotors,
+        reflector: params.get('u') || 'B',
+        rings: params.get('g') || 'AAA',
+        positions: params.get('p') || 'AAA',
+        plugboard: params.get('s') || '',
+      });
+    } catch (error) {
+      console.warn('Could not read key from URL:', error);
+      return null;
+    }
+  }
+
+  /* -----------------------------------------------------------------------
+     Persistence & preferences
+     ----------------------------------------------------------------------- */
+
+  function loadPreferences() {
+    try {
+      const raw = window.localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw);
+      if (!saved || typeof saved !== 'object') return;
+      if (typeof saved.sound === 'boolean') state.sound = saved.sound;
+      if (typeof saved.grouping === 'boolean') state.grouping = saved.grouping;
+      try {
+        const config = E.normalizeConfig({
+          rotors: saved.rotors,
+          reflector: saved.reflector,
+          rings: saved.rings,
+          positions: saved.start,
+          plugboard: saved.plugboard,
+        });
+        state.rotors = [...config.rotors];
+        state.reflector = config.reflector;
+        state.rings = [...config.rings];
+        state.start = [...config.positions];
+        state.plugboard = [...config.plugboard];
+      } catch (error) {
+        console.warn('Stored key was invalid and has been ignored:', error);
+      }
+    } catch (error) {
+      console.warn('Could not read saved state:', error);
+    }
+  }
+
+  function saveState() {
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        v: 1,
+        rotors: state.rotors,
+        reflector: state.reflector,
+        rings: state.rings,
+        start: state.start,
+        plugboard: state.plugboard,
+        sound: state.sound,
+        grouping: state.grouping,
+      }));
+    } catch (error) {
+      /* Private mode or a full quota should never break the machine. */
+    }
+  }
+
+  function updateSoundButton() {
+    els.soundBtn.classList.toggle('is-muted', !state.sound);
+    els.soundBtn.setAttribute('aria-pressed', state.sound ? 'true' : 'false');
+    els.soundLabel.textContent = state.sound ? '音效开' : '音效静音';
+  }
+
+  function toggleSound() {
+    state.sound = !state.sound;
+    updateSoundButton();
+    if (state.sound) {
+      ensureAudio();
+      playClick({ frequency: 1500, gain: 0.025 });
+      toast('音效已开启');
+    } else {
+      toast('音效已静音');
+    }
+    saveState();
+  }
+
+  /* -----------------------------------------------------------------------
+     Help dialog and self test
+     ----------------------------------------------------------------------- */
+
+  function openHelp() {
+    if (typeof els.helpDialog.showModal === 'function') {
+      if (!els.helpDialog.open) els.helpDialog.showModal();
+    } else {
+      els.helpDialog.setAttribute('open', '');
+    }
+  }
+
+  function closeHelp() {
+    if (typeof els.helpDialog.close === 'function') els.helpDialog.close();
+    else els.helpDialog.removeAttribute('open');
+  }
+
+  function renderSelfTest(result) {
+    els.selfTestResult.dataset.state = result.pass ? 'pass' : 'fail';
+    els.selfTestResult.textContent = result.pass
+      ? `通过 · AAAAA → ${result.ciphertext} · 回解 ${result.reciprocal}`
+      : `失败 · 得到 ${result.ciphertext}，预期 ${result.expected}`;
+  }
+
+  function performSelfTest() {
+    const result = E.runSelfTest();
+    renderSelfTest(result);
+    if (result.pass) {
+      playDoneSound();
+      toast('自检通过：AAAAA → BDZGO');
+    } else {
+      playError();
+      toast('自检失败', 'error');
+    }
+  }
+
+  /* -----------------------------------------------------------------------
+     Actions / events
+     ----------------------------------------------------------------------- */
+
+  function handleAction(action) {
+    switch (action) {
+      case 'sound': toggleSound(); break;
+      case 'help': openHelp(); break;
+      case 'close-help': closeHelp(); break;
+      case 'reset-pos': resetPositions(); break;
+      case 'random-key': randomKey(); break;
+      case 'copy-key': copyKeySheet(); break;
+      case 'share-key': shareKey(); break;
+      case 'run': runMessage(); break;
+      case 'clear-message': clearMessage(); break;
+      case 'use-output': useOutputAsInput(); break;
+      case 'copy-output': copyOutput(); break;
+      case 'copy-tape': copyTape(); break;
+      case 'clear-tape': clearTape(); break;
+      case 'random-plugs': randomizePlugs(); break;
+      case 'clear-plugs': clearPlugs(); break;
+      case 'self-test': performSelfTest(); break;
+      case 'paste': pasteFromClipboard(); break;
+      case 'toggle-reflector': toggleReflector(); break;
+      default: break;
+    }
+  }
+
+  function clearTape() {
+    if (guardBusy()) return;
+    state.tape = '';
+    renderTape();
+    toast('纸带已清空');
+  }
+
+  function bindEvents() {
+    document.addEventListener('click', (event) => {
+      const actionEl = event.target.closest('[data-action]');
+      if (actionEl && !(actionEl instanceof HTMLInputElement)) {
+        handleAction(actionEl.dataset.action);
+      }
+    });
+
+    els.keyboard.addEventListener('click', (event) => {
+      const key = event.target.closest('.key');
+      if (key) pressLetter(key.dataset.key);
+    });
+
+    els.rotorControls.addEventListener('change', (event) => {
+      if (event.target.matches('[data-rotor-select]')) {
+        const slot = Number(event.target.closest('.rc').dataset.slot);
+        setRotorType(slot, event.target.value);
+      }
+    });
+
+    els.rotorControls.addEventListener('click', (event) => {
+      const ringButton = event.target.closest('[data-ring-step]');
+      if (ringButton) {
+        const slot = Number(ringButton.closest('.rc').dataset.slot);
+        stepRing(slot, Number(ringButton.dataset.ringStep));
+        return;
+      }
+      const startButton = event.target.closest('[data-start-step]');
+      if (startButton) {
+        const slot = Number(startButton.closest('.rc').dataset.slot);
+        stepStart(slot, Number(startButton.dataset.startStep));
+      }
+    });
+
+    els.reflectorControl.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-reflector]');
+      if (button) setReflector(button.dataset.reflector);
+    });
+
+    els.plugRows.addEventListener('click', (event) => {
+      const plug = event.target.closest('[data-plug]');
+      if (plug) handlePlugClick(plug.dataset.plug);
+    });
+
+    els.plugPairs.addEventListener('click', (event) => {
+      const chip = event.target.closest('[data-unplug]');
+      if (chip) removePlugPair(chip.dataset.unplug);
+    });
+
+    els.messageInput.addEventListener('input', updateCharCount);
+
+    els.groupToggle.addEventListener('change', () => {
+      state.grouping = els.groupToggle.checked;
+      renderOutput();
+      saveState();
+    });
+
+    els.helpDialog.addEventListener('click', (event) => {
+      if (event.target === els.helpDialog) closeHelp();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        if (els.helpDialog.open) {
+          closeHelp();
+          return;
+        }
+        if (selectedPlug) {
+          selectedPlug = null;
+          renderPlugboard();
+        }
+        return;
+      }
+
+      if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+        if (els.helpDialog.open) return;
+        event.preventDefault();
+        runMessage();
+        return;
+      }
+
+      if (event.ctrlKey || event.metaKey || event.altKey) return;
+      if (event.repeat || event.isComposing) return;
+      if (els.helpDialog.open) return;
+
+      const target = event.target;
+      const tag = target && target.tagName ? target.tagName.toLowerCase() : '';
+      const editing = /input|textarea|select/.test(tag) || (target && target.isContentEditable);
+      if (editing) return;
+
+      if (/^[a-zA-Z]$/.test(event.key)) {
+        event.preventDefault();
+        pressLetter(event.key.toUpperCase());
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(drawCables, 80);
+    });
+
+    if (typeof ResizeObserver === 'function') {
+      const observer = new ResizeObserver(() => drawCables());
+      observer.observe(els.keyboard.closest('.machine') || document.body);
+    }
+
+    document.addEventListener('pointerdown', () => {
+      if (state.sound) ensureAudio();
+    }, { once: true });
+  }
+
+  /* -----------------------------------------------------------------------
+     Boot
+     ----------------------------------------------------------------------- */
+
+  function init() {
+    loadPreferences();
+    buildRotorDeck();
+    buildLampsAndKeys();
+    buildRotorControls();
+    buildPlugboard();
+    bindEvents();
+
+    machine = createMachine(state, state.start);
+    state.plugboard = machine.getConfig().plugboard;
+    els.groupToggle.checked = state.grouping;
+
+    renderAll();
+    clearTrace();
+    renderSelfTest(E.runSelfTest());
+    updateSoundButton();
+
+    const shared = readSharedConfig();
+    if (shared) {
+      installConfig(shared, { reset: true, clear: true });
+      try {
+        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      } catch (error) {
+        try {
+          window.location.hash = '';
+        } catch (hashError) {
+          /* The key is loaded; only the address bar could not be tidied. */
+        }
+      }
+      toast('已从分享链接载入密钥');
+    }
+
+    saveState();
+  }
+
+  init();
+})();
+
+</script>
+</body>
+</html>

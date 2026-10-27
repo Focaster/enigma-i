@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>ENIGMA I · 恩格玛机互动复刻</title>
+  <meta name="description" content="在浏览器中复刻恩格玛机 Enigma I（M3）：五只可选转子、B/C 反射器、插线板、双步进与实时信号路径。可逐字加密、批量加解密、生成并分享密钥。">
+  <meta name="theme-color" content="#0b0c0e">
+  <meta property="og:title" content="ENIGMA I · 恩格玛机互动复刻">
+  <meta property="og:description" content="按历史接线表复刻的 Enigma I（M3）：转子、插线板、双步进与实时信号路径。纯静态网页，离线可玩。">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="preview/social.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <a class="skip-link" href="#messageInput">跳到报文输入</a>
+
+  <header class="masthead">
+    <div class="brand">
+      <div class="brand-seal" aria-hidden="true">E</div>
+      <div class="brand-text">
+        <p class="kicker">Chiffriermaschine · 1930</p>
+        <h1>ENIGMA <em>I</em></h1>
+        <p class="tagline">三转子密码机 · 浏览器互动复刻</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span class="header-chip" title="当前反射器">UKW <b data-header-ukw>B</b></span>
+      <button type="button" class="ghost-btn" data-action="sound" aria-pressed="true">
+        <svg class="icon icon--sound-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>
+        <svg class="icon icon--sound-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="m17 9 5 5m0-5-5 5"/></svg>
+        <span data-sound-label>音效开</span>
+      </button>
+      <button type="button" class="ghost-btn" data-action="help">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.6 2.6 0 1 1 3.7 2.4c-.8.4-1.2 1-1.2 1.9"/><path d="M12 17h.01"/></svg>
+        <span>操作说明</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <div class="column column--main">
+      <section class="panel machine" aria-label="恩格玛机操作台">
+        <span class="screw screw--tl" aria-hidden="true"></span>
+        <span class="screw screw--tr" aria-hidden="true"></span>
+        <span class="screw screw--bl" aria-hidden="true"></span>
+        <span class="screw screw--br" aria-hidden="true"></span>
+
+        <div class="machine-bar">
+          <span class="machine-plate">ENIGMA <i>I</i></span>
+          <span class="machine-status" id="machineStatus">
+            <i class="led" aria-hidden="true"></i>
+            <span data-status>待命 · BEREIT</span>
+          </span>
+        </div>
+
+        <div class="rotor-deck" id="rotorDeck"></div>
+
+        <div class="lamp-section">
+          <p class="section-label"><span>Lampenfeld</span> 灯板</p>
+          <div class="lampboard" id="lampboard"></div>
+        </div>
+
+        <div class="keyboard-wrap">
+          <p class="section-label section-label--keys"><span>Tastatur</span> 键盘</p>
+          <div class="keyboard" id="keyboard"></div>
+        </div>
+
+        <div class="tape-bar">
+          <span class="tape-label">纸带</span>
+          <div class="tape" id="tape" aria-label="实时输出纸带">
+            <span class="tape-empty">按下按键开始加密…</span>
+          </div>
+          <button type="button" class="mini-btn" data-action="copy-tape">复制</button>
+          <button type="button" class="mini-btn" data-action="clear-tape">清空</button>
+        </div>
+
+        <p class="machine-nameplate">CHIFFRIERMASCHINE · M3</p>
+      </section>
+
+      <section class="panel plugboard-panel" aria-labelledby="plugTitle">
+        <div class="panel-head">
+          <div class="panel-heading">
+            <p class="panel-kicker">Steckerbrett</p>
+            <h2 id="plugTitle">插线板</h2>
+          </div>
+          <span class="chip chip--count" data-plug-count>0 / 10 对</span>
+        </div>
+
+        <div class="plugboard" id="plugboard">
+          <svg class="cables" id="cables" aria-hidden="true"></svg>
+          <div class="plug-rows" id="plugRows"></div>
+        </div>
+
+        <div class="plug-footer">
+          <div class="plug-pairs" id="plugPairs"><span class="plug-empty">尚未插线 — 点击两个字母建立连线</span></div>
+          <div class="plug-actions">
+            <button type="button" class="mini-btn" data-action="random-plugs">随机插线</button>
+            <button type="button" class="mini-btn" data-action="clear-plugs">全部拔除</button>
+          </div>
+        </div>
+        <p class="hint-line">插线板在电流进入和离开转子组时各交换一次字母。点击已连接的字母可拔除该线。</p>
+      </section>
+    </div>
+
+    <div class="column column--side">
+      <section class="panel settings-panel" aria-labelledby="settingsTitle">
+        <div class="panel-head">
+          <div class="panel-heading">
+            <p class="panel-kicker">Walzenlage · Ringstellung</p>
+            <h2 id="settingsTitle">密钥设置</h2>
+          </div>
+          <span class="chip" data-key-badge>I · II · III</span>
+        </div>
+
+        <div class="rotor-controls" id="rotorControls"></div>
+
+        <div class="reflector-row">
+          <span class="control-label">反射器</span>
+          <div class="segmented" id="reflectorControl" role="group" aria-label="选择反射器">
+            <button type="button" data-reflector="B" class="is-active" aria-pressed="true">B</button>
+            <button type="button" data-reflector="C" aria-pressed="false">C</button>
+          </div>
+          <span class="reflector-note" data-reflector-note>标准接线</span>
+        </div>
+
+        <div class="settings-actions">
+          <button type="button" class="secondary-btn" data-action="reset-pos">
+            <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10a8 8 0 1 1 2.3 6.3"/><path d="M4 4v6h6"/></svg>
+            转子复位
+          </button>
+          <button type="button" class="secondary-btn" data-action="random-key">
+            <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9h.01M15 9h.01M9 15h.01M15 15h.01M12 12h.01"/></svg>
+            随机密钥
+          </button>
+        </div>
+
+        <details class="key-sheet" id="keySheet">
+          <summary><span>当前密钥单</span><span class="summary-hint">展开 / 收起</span></summary>
+          <pre id="keySheetText"></pre>
+          <div class="key-sheet-actions">
+            <button type="button" class="mini-btn" data-action="copy-key">复制密钥单</button>
+            <button type="button" class="mini-btn" data-action="share-key">复制分享链接</button>
+          </div>
+        </details>
+
+        <p class="hint-line">「起始位置」是每条报文开始时的转子窗口字母，更改后会立即复位转子；环设置以 01–26 对应 A–Z。转子下拉框中的第二个字母是该型号的缺口。</p>
+      </section>
+
+      <section class="panel message-panel" aria-labelledby="messageTitle">
+        <div class="panel-head">
+          <div class="panel-heading">
+            <p class="panel-kicker">Funktelegramm</p>
+            <h2 id="messageTitle">报文</h2>
+          </div>
+          <span class="chip">A ↔ Z 对合</span>
+        </div>
+
+        <div class="message-input-wrap">
+          <label class="sr-only" for="messageInput">输入明文或密文</label>
+          <textarea id="messageInput" rows="3" spellcheck="false" autocomplete="off"
+            placeholder="在此粘贴明文或密文；也可以直接按机器键盘逐字加密。"></textarea>
+          <div class="input-meta">
+            <span data-char-count>0 个字母</span>
+            <button type="button" class="link-btn" data-action="paste">从剪贴板粘贴</button>
+          </div>
+        </div>
+
+        <div class="message-actions">
+          <button type="button" class="primary-btn" data-action="run">
+            <span data-run-label>运行加密 / 解密</span>
+            <kbd>Ctrl</kbd><kbd>↵</kbd>
+          </button>
+          <button type="button" class="secondary-btn" data-action="use-output">输出作输入</button>
+          <button type="button" class="secondary-btn" data-action="clear-message">清空</button>
+        </div>
+
+        <div class="output-head">
+          <span>输出</span>
+          <span class="output-meta" data-output-meta>等待输入</span>
+        </div>
+        <div class="output is-empty" id="output" aria-label="加密输出">—</div>
+
+        <div class="output-actions">
+          <label class="check">
+            <input type="checkbox" data-action="grouping" checked>
+            <span>5 字分组</span>
+          </label>
+          <button type="button" class="mini-btn" data-action="copy-output">复制输出</button>
+        </div>
+
+        <p class="hint-line">恩格玛机是自反的：同一密钥与起始位置下，加密和解密是同一个操作。「运行」会先把转子复位到起始位置；机器按键则从当前位置继续。</p>
+      </section>
+
+      <section class="panel trace-panel" aria-labelledby="traceTitle">
+        <div class="panel-head">
+          <div class="panel-heading">
+            <p class="panel-kicker">Stromweg</p>
+            <h2 id="traceTitle">信号路径</h2>
+          </div>
+          <span class="chip" data-trace-pos>—</span>
+        </div>
+
+        <div class="trace" id="trace">
+          <p class="trace-empty">按下一个键，查看电流如何穿过插线板、三只转子和反射器。金色表示去程，青色表示回程。</p>
+        </div>
+
+        <details class="trace-log" id="traceLog">
+          <summary><span>逐字日志</span><span class="summary-hint" data-log-count>0 条</span></summary>
+          <div class="log-scroll">
+            <table>
+              <thead>
+                <tr><th>#</th><th>输入</th><th>输出</th><th>转子位置</th></tr>
+              </thead>
+              <tbody id="logBody"></tbody>
+            </table>
+          </div>
+        </details>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <span>ENIGMA I (M3) · 按历史接线表与步进机构复刻</span>
+    <span>仅用于历史演示与学习 · 不构成现实加密方案</span>
+  </footer>
+
+  <dialog class="help-dialog" id="helpDialog" aria-labelledby="helpTitle">
+    <button type="button" class="dialog-close" data-action="close-help" aria-label="关闭说明">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+    </button>
+    <div class="dialog-inner">
+      <p class="panel-kicker">Operating Instructions</p>
+      <h2 id="helpTitle">操作说明</h2>
+      <p class="help-lead">这是一台按历史接线表复刻的 <strong>Enigma I（M3）</strong>。电流从按键出发，经过插线板、三只转子、反射器，再原路折返点亮灯板。同一个密钥下，加密与解密互为逆运算。</p>
+
+      <h3>快速开始</h3>
+      <ol class="steps">
+        <li><b>设置密钥。</b>在「密钥设置」中选择三只转子的顺序、环设置与起始位置；也可以点「随机密钥」生成一整套。</li>
+        <li><b>插线。</b>在插线板上依次点击两个字母即可连成一对，最多 10 对；点击已连接的字母可拔除。</li>
+        <li><b>输入。</b>在「报文」中粘贴明文或密文后运行；或直接敲击电脑键盘、点击机器按键逐字加密。</li>
+        <li><b>解密。</b>使用完全相同的转子顺序、环设置、起始位置和插线，把密文作为输入再次运行。</li>
+      </ol>
+
+      <h3>三个容易混淆的地方</h3>
+      <div class="help-grid">
+        <article class="help-card">
+          <h4>位置与环设置</h4>
+          <p><b>位置（Pos）</b>是转子窗口里的字母，也就是当前电路状态；<b>环设置（Ring）</b>决定字母环相对内部接线的偏移。两者都会改变结果，但只有位置会在按键时前进。</p>
+        </article>
+        <article class="help-card">
+          <h4>双步进</h4>
+          <p>右转子每按一次必转。当右转子停在缺口上，中转子进位；而当中转子自己停在缺口上时，会带着左转子一起转——这就是著名的 <b>double stepping</b>。</p>
+        </article>
+        <article class="help-card">
+          <h4>插线板</h4>
+          <p>每条线交换两个字母，并在电流往返时各生效一次。10 对线让密钥空间增加约 <b>1.5 × 10<sup>14</sup></b> 种组合，是战前后期最重要的加强措施之一。</p>
+        </article>
+      </div>
+
+      <h3>快捷键</h3>
+      <table class="shortcut-table">
+        <tbody>
+          <tr><td><kbd>A</kbd>–<kbd>Z</kbd></td><td>逐字加密（焦点不在输入框时）</td></tr>
+          <tr><td><kbd>Ctrl</kbd>+<kbd>Enter</kbd></td><td>运行整段报文</td></tr>
+          <tr><td><kbd>Esc</kbd></td><td>关闭本说明</td></tr>
+        </tbody>
+      </table>
+
+      <h3>关于准确度</h3>
+      <p class="help-note">转子 I–V 的接线与缺口、UKW-B/C 反射器、三转子步进和双步进均按 Enigma I 的历史数据实现；不包含海军 M4 的四转子、薄反射器、Uhr 或特殊军用改装。它是一台教学用复刻机，不是现实可用的密码工具。</p>
+
+      <div class="self-test">
+        <div>
+          <h4>已知向量自检</h4>
+          <p>转子 I·II·III，UKW-B，环设置与起始位置全部为 A，无插线：<code>AAAAA</code> 应当得到 <code>BDZGO</code>。</p>
+        </div>
+        <button type="button" class="secondary-btn" data-action="self-test">运行自检</button>
+        <p class="self-test-result" id="selfTestResult" role="status">等待运行</p>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+  <p class="sr-only" id="srStatus" aria-live="polite"></p>
+
+  <script src="enigma-core.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,305 @@
+[
+  {
+    "config": {
+      "rotors": [
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "B",
+      "rings": "PMR",
+      "positions": "CAM",
+      "plugboard": [
+        "LS",
+        "KX",
+        "GU",
+        "IT",
+        "PW",
+        "AY"
+      ]
+    },
+    "plaintext": "YJGYQMNKJCKZYLENKJSWPLOKGBERGSEHPW",
+    "ciphertext": "GYAXRSJENVOUTKBDDWPBTHHFRWTDJUIOSU"
+  },
+  {
+    "config": {
+      "rotors": [
+        "II",
+        "I",
+        "V"
+      ],
+      "reflector": "C",
+      "rings": "DMJ",
+      "positions": "URA",
+      "plugboard": [
+        "QV",
+        "CH",
+        "EO",
+        "FM",
+        "BI",
+        "NY",
+        "JK"
+      ]
+    },
+    "plaintext": "NCJAJQKCSISZS",
+    "ciphertext": "DIZJLWRJKPFMX"
+  },
+  {
+    "config": {
+      "rotors": [
+        "I",
+        "V",
+        "III"
+      ],
+      "reflector": "B",
+      "rings": "DLY",
+      "positions": "UFO",
+      "plugboard": [
+        "LM",
+        "BP",
+        "CG",
+        "JO",
+        "KR",
+        "NX",
+        "UV",
+        "EF"
+      ]
+    },
+    "plaintext": "YCEKKCVBPYLWLGJJXRIQYJFLWKWWMQNOGQLN",
+    "ciphertext": "TOJTQYCDNQSTJHYIBFLCBWAVQQTHHOGFJKFF"
+  },
+  {
+    "config": {
+      "rotors": [
+        "III",
+        "II",
+        "V"
+      ],
+      "reflector": "C",
+      "rings": "OCG",
+      "positions": "YMS",
+      "plugboard": [
+        "LR",
+        "EN",
+        "IO",
+        "TV",
+        "GZ"
+      ]
+    },
+    "plaintext": "TPXQSZJNDSRZVCRQZSXJDPWYOREFNTZVAV",
+    "ciphertext": "CYAVKJKZCODDNFGBMIIMSKFLUPOJEPCOCM"
+  },
+  {
+    "config": {
+      "rotors": [
+        "I",
+        "V",
+        "IV"
+      ],
+      "reflector": "C",
+      "rings": "ZHK",
+      "positions": "XAY",
+      "plugboard": [
+        "GK"
+      ]
+    },
+    "plaintext": "NNLPXMCYKPHP",
+    "ciphertext": "ZQJUBGJPHGSX"
+  },
+  {
+    "config": {
+      "rotors": [
+        "V",
+        "IV",
+        "II"
+      ],
+      "reflector": "C",
+      "rings": "CSW",
+      "positions": "FWY",
+      "plugboard": [
+        "AG",
+        "DU",
+        "QZ",
+        "KW",
+        "BV",
+        "EJ",
+        "MY",
+        "NT",
+        "OR",
+        "CF"
+      ]
+    },
+    "plaintext": "RIQPDOXTZKHOIDHWUMQKUPWFMUTPQG",
+    "ciphertext": "JMIZAZMDXBQTGTGITLBFXAAJYSMTCS"
+  },
+  {
+    "config": {
+      "rotors": [
+        "II",
+        "I",
+        "IV"
+      ],
+      "reflector": "C",
+      "rings": "SVH",
+      "positions": "TGI",
+      "plugboard": [
+        "CK",
+        "NV",
+        "TY",
+        "GI",
+        "EQ",
+        "PX",
+        "UZ",
+        "AL",
+        "FH",
+        "BM"
+      ]
+    },
+    "plaintext": "NEXTYOFGQRSXZHMNZQDPBLPODDLOFNLFXBYZDY",
+    "ciphertext": "QXBIMNLLWOCVJRYKUZSWNRWWCJAXPQKUEPWYKS"
+  },
+  {
+    "config": {
+      "rotors": [
+        "I",
+        "IV",
+        "II"
+      ],
+      "reflector": "B",
+      "rings": "IWS",
+      "positions": "HAO",
+      "plugboard": [
+        "MW",
+        "PX",
+        "GS",
+        "LR",
+        "CJ",
+        "KQ",
+        "FO",
+        "AE"
+      ]
+    },
+    "plaintext": "SYESNEICYZJKTDBGIC",
+    "ciphertext": "PVIKVVVSVRSIFHCVHI"
+  },
+  {
+    "config": {
+      "rotors": [
+        "II",
+        "IV",
+        "I"
+      ],
+      "reflector": "C",
+      "rings": "ADN",
+      "positions": "KCL",
+      "plugboard": [
+        "HV",
+        "SU",
+        "PX",
+        "FI"
+      ]
+    },
+    "plaintext": "DPYNWNNCBTZWBJTYHKJ",
+    "ciphertext": "BLHRFDIDHKAZOUWHDUU"
+  },
+  {
+    "config": {
+      "rotors": [
+        "III",
+        "II",
+        "IV"
+      ],
+      "reflector": "C",
+      "rings": "YBN",
+      "positions": "FMX",
+      "plugboard": []
+    },
+    "plaintext": "ZLNNHWRXRBRVYCBRLZPRTNMBDLWI",
+    "ciphertext": "IGFUIMVLTKVQTEZOMJDIIXDESYEC"
+  },
+  {
+    "config": {
+      "rotors": [
+        "III",
+        "I",
+        "V"
+      ],
+      "reflector": "B",
+      "rings": "THH",
+      "positions": "LJC",
+      "plugboard": [
+        "KW",
+        "PU",
+        "DN",
+        "CF",
+        "QZ"
+      ]
+    },
+    "plaintext": "EOJZOODYCXKNSDKBKGWOJHUUI",
+    "ciphertext": "HIDKEEAKVDZCPLYEIVADUYTMB"
+  },
+  {
+    "config": {
+      "rotors": [
+        "II",
+        "V",
+        "I"
+      ],
+      "reflector": "C",
+      "rings": "PDD",
+      "positions": "IJE",
+      "plugboard": [
+        "AL",
+        "CK",
+        "SW",
+        "MR",
+        "FP",
+        "EY",
+        "IX",
+        "HU",
+        "BG"
+      ]
+    },
+    "plaintext": "QSRXUFDCSLKNXKQGBSMIWGRJSVPF",
+    "ciphertext": "YDMIJAQQKZNYNDRRKEKEOIFDROYT"
+  },
+  {
+    "config": {
+      "rotors": [
+        "I",
+        "II",
+        "V"
+      ],
+      "reflector": "B",
+      "rings": "CTO",
+      "positions": "WXM",
+      "plugboard": [
+        "AX"
+      ]
+    },
+    "plaintext": "QFAZFYWLSQMGNOHLAENPYEEUO",
+    "ciphertext": "DAGJQSRBJAZOSPYEZNKZXZQCF"
+  },
+  {
+    "config": {
+      "rotors": [
+        "V",
+        "II",
+        "IV"
+      ],
+      "reflector": "C",
+      "rings": "CKJ",
+      "positions": "IUC",
+      "plugboard": [
+        "LN",
+        "GS",
+        "IP",
+        "DW",
+        "QY",
+        "EM"
+      ]
+    },
+    "plaintext": "XVWKOGZZ",
+    "ciphertext": "UAPOXJJI"
+  }
+]
